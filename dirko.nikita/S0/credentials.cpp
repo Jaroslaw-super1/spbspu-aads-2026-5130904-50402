@@ -3,5 +3,5 @@
 
 std::ostream &dirko::out_credentials(std::ostream &os)
 {
-  return os << "dirko.nikita";
+  return os << "dirko.nikolay";
 }
