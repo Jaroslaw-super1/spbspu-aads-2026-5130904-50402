@@ -3,5 +3,5 @@
 
 std::ostream &chernikov::out_credentials(std::ostream &out)
 {
-    return out << "chlenikov.leonid";
+    return out << "chernikov.leonid";
 }
