@@ -3,5 +3,5 @@
 
 std::ostream& bukreev::printCredentials(std::ostream& out)
 {
-  return out << "bukreev.yakovv";
+  return out << "bukreev.yakov";
 }
