@@ -1,7 +1,7 @@
 #include "credentials.hpp"
 #include <iostream>
 
-std::ostream & lavrentev::out_credentials(std::ostream & out)
+std::ostream & lavrentev::out_credentials(std::ostream & os)
 {
-    return out << "lavrentev.makar";
+    return os << "lavrentev.makar";
 }
