@@ -1,7 +1,8 @@
 #include <iostream>
+#include "credentials.hpp"
 
 int main()
 {
-  std::cout << "sogdanov.sanal\n";
+  sogdanov::out_credentials(std::cout) << "\n";
 }
 
