@@ -1,6 +1,7 @@
+#include "credentials.hpp"
 #include <iostream>
 
 int main()
 {
-  std::cout << "shirokov.arsenii\n";
+  shirokov::out_credentials(std::cout) << '\n';
 }
