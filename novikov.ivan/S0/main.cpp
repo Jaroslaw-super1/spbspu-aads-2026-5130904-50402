@@ -1,5 +1,6 @@
 #include <iostream>
+#include "credentials.hpp"
 int main()
 {
-  std::cout << "novikov.ivan\n";
+  novikov::out_credentials(std::cout) << '\n';
 }
