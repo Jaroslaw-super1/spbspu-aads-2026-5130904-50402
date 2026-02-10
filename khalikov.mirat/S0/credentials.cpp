@@ -3,5 +3,5 @@
 
 std::ostream & khalikov::out_credentials(std::ostream & out)
 {
-  return out << "khalikov.marat";
+  return out << "khalikov.mirat";
 }
