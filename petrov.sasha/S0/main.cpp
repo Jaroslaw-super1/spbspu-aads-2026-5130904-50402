@@ -2,5 +2,5 @@
 #include "credentials.hpp"
 int main()
 {
-	petrov::out_credentials(std::cout) << '\n';
+  petrov::out_credentials(std::cout) << '\n';
 }
