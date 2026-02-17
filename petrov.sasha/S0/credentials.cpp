@@ -2,6 +2,6 @@
 #include <iostream>
 std::ostream& petrov::out_credentials(std::ostream& out)
 {
-	return out << "petrov.sasha";
+  return out << "petrov.sasha";
 }
 
