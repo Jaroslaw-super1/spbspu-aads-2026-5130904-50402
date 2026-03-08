@@ -3,16 +3,25 @@
 
 namespace afanasev
 {
+  template< class T > class Node;
   template< class T > class List;
   template< class T > class LIter;
   template< class T > class LCIter;
 
-// Список(узел)
+// узел
+  template< class T >
+  class Node
+  {
+    T val_;
+    Node< T > * next_;
+  };
+
+// Список я так понял именно с ним будет работать пользователь
   template< class T >
   class List
   {
-    T val_;
-    List< T > * next_;
+    Node< T > * fake;
+    size_t size_;
   };
 
 
@@ -21,10 +30,10 @@ namespace afanasev
   class LIter
   {
     friend class List< T >;
-    List< T > * curr_;
+    Node< T > * curr_;
 
   public:
-    LIter(List< T > * p);
+    LIter(Node< T > * p);
     T & operator*() const;
     LIter & operator++();
     LIter & operator++(int);
@@ -33,7 +42,7 @@ namespace afanasev
   };
 
   template < class T >
-  LIter< T >::LIter(List< T > * p):
+  LIter< T >::LIter(Node< T > * p):
     curr_(p)
   {}
 
@@ -76,10 +85,10 @@ namespace afanasev
   class LCIter
   {
     friend class List< T >;
-    const List< T > * curr_;
+    const Node< T > * curr_;
 
   public:
-    LCIter(const List< T > * p);
+    LCIter(const Node< T > * p);
     const T & operator*() const;
     LCIter & operator++();
     LCIter & operator++(int);
@@ -88,7 +97,7 @@ namespace afanasev
   };
 
   template < class T >
-  LCIter< T >::LCIter(const List< T > * p):
+  LCIter< T >::LCIter(const Node< T > * p):
     curr_(p)
   {}
 
