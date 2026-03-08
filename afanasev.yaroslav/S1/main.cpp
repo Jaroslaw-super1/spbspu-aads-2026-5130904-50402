@@ -15,6 +15,7 @@ namespace afanasev
     List< T > * next_;
   };
 
+
 // Обычный итератор
   template < class T > class LIter
   {
@@ -30,12 +31,18 @@ namespace afanasev
     bool operator!=(const LIter< T > & other) const;
   };
 
+  template < class T >
+  LIter< T >::LIter(List< T > * p):
+    curr_(p)
+  {}
+
+
 // Константный итератор
   template < class T >
   class LCIter
   {
     friend class List< T >;
-    const List< T > * curr;
+    const List< T > * curr_;
 
   public:
     LCIter(const List< T > * p);
@@ -45,7 +52,15 @@ namespace afanasev
     bool operator==(const LCIter< T > & other) const;
     bool operator!=(const LCIter< T > & other) const;
   };
+
+  template < class T >
+  LCIter< T >::LCIter(const List< T > * p):
+    curr_(p)
+  {}
+
+
 }
+
 
 int main()
 {
