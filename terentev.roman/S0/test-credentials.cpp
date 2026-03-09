@@ -5,6 +5,6 @@
 BOOST_AUTO_TEST_CASE(credentials_test)
 {
   std::ostringstream out;
-  terentev::outt_credentials(out);
+  terentev::out_credentials(out);
   BOOST_TEST(out.str() == "terentev.roman");
 }
