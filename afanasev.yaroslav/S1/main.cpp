@@ -167,7 +167,7 @@ namespace afanasev
   template < class T >
   List< T > & List< T >::operator=(const List< T > & other)
   {
-    if (this != &other)
+    if (this != & other)
     {
       List tmp(other);
       swap(tmp);
@@ -178,7 +178,7 @@ namespace afanasev
   template < class T >
   List< T > & List< T >::operator=(List< T > && other) noexcept
   {
-    if (this != &other)
+    if (this != & other)
     {
       clear();
       delete fake_;
@@ -198,7 +198,6 @@ namespace afanasev
     std::swap(fake_, other.fake_);
     std::swap(size_, other.size_);
   }
-
 
 
 
@@ -310,8 +309,10 @@ namespace afanasev
     return curr_ != other.curr_;
   }
 
+
+
 // Функции для программы
-// Ввод создание списков
+// Ввод создание списка
   bool input(std::istream & in, List< std::pair< std::string, List< size_t > > > & list)
   {
     std::string name;
@@ -364,18 +365,17 @@ namespace afanasev
     }
     return true;
   }
-/*
-// Функция должна вернуть std::string элемент по его координатам x и y в списке с std::pair 
-// std::pair< std::string, List< size_t > > - std::string название списка List< size_t > сам список
-  std::string getElem(size_t x, size_t y, List< std::pair< std::string, List< size_t > > > & list)
-  {
-    return;
-  }
 
-  void output(List< std::pair< std::string, List< size_t > > > & list)
+  void output(std::ostream & out, List< std::pair< std::string, List< size_t > > > & list)
   {
-    return;
-  }*/
+    LIter< std::pair< std::string, List< size_t > > > end(nullptr);
+
+    for (LIter< std::pair< std::string, List< size_t > > > it = list.begin(); it != end; ++it)
+    {
+      out << (* it).first << ' ';
+    }
+    out << '\n';
+  }
 }
 
 
@@ -384,7 +384,17 @@ int main()
   namespace a = afanasev;
   a::List< std::pair< std::string, a::List< size_t > > > list;
   bool flag = a::input(std::cin, list);
-  //a::output(list);
+
+  if (flag)
+  {
+    a::output(std::cout, list);
+  }
+  else
+  {
+    std::cout << "ыыыыыыы";
+  }
+  
+  
 
   return 0;
 }
