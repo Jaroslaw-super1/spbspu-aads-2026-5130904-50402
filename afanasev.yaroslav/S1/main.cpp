@@ -209,6 +209,7 @@ namespace afanasev
     Node< T > * curr_;
 
   public:
+    LIter();
     LIter(Node< T > * p);
     T & operator*() const;
     LIter & operator++();
@@ -216,6 +217,11 @@ namespace afanasev
     bool operator==(const LIter< T > & other) const;
     bool operator!=(const LIter< T > & other) const;
   };
+
+  template < class T >
+  LIter< T >::LIter():
+    curr_(nullptr)
+  {}
 
   template < class T >
   LIter< T >::LIter(Node< T > * p):
@@ -366,15 +372,100 @@ namespace afanasev
     return true;
   }
 
+  void outputNumbers(std::ostream & out, size_t maxLen, List< LIter< size_t > > numbers)
+  {
+    LIter< size_t > numEnd(nullptr);
+    List< size_t > sums;
+    LIter< size_t > lastSum(nullptr);
+    bool firstSum = true;
+
+    for (size_t row = 0; row < maxLen; ++row)
+    {
+      size_t rowSum = 0;
+      LIter< LIter< size_t > > numsEnd(nullptr);
+      bool firstCol = true;
+
+      for (LIter< LIter< size_t > > numIt = numbers.begin(); numIt != numsEnd; ++numIt)
+      {
+        if (!firstCol) out << ' ';
+        firstCol = false;
+
+        LIter< size_t > & current = * numIt;
+
+        if (current != numEnd)
+        {
+          out << * current;
+          rowSum += * current;
+          ++current;
+        }
+        else
+        {
+          out << '_';
+        }
+      }
+      out << '\n';
+
+      if (firstSum)
+      {
+        sums.addFirst(rowSum);
+        lastSum = sums.begin();
+        firstSum = false;
+      }
+      else
+      {
+        sums.insert(rowSum, lastSum);
+        ++lastSum;
+      }
+    }
+
+    LIter< size_t > sumsEnd(nullptr);
+
+    out << '\n';
+
+    for (LIter< size_t > sIt = sums.begin(); sIt != sumsEnd; ++sIt)
+    {
+        if (sIt != sums.begin()) out << ' ';
+        out << * sIt;
+    }
+    out << '\n';
+  }
+
   void output(std::ostream & out, List< std::pair< std::string, List< size_t > > > & list)
   {
     LIter< std::pair< std::string, List< size_t > > > end(nullptr);
+    size_t lenght = 0;
+
+    List< LIter< size_t > > numbers;
+    size_t maxLen = 0;
+    LIter< LIter< size_t > > lastNumIter(nullptr);
+    bool firstNum = true;
 
     for (LIter< std::pair< std::string, List< size_t > > > it = list.begin(); it != end; ++it)
     {
       out << (* it).first << ' ';
+      ++lenght;
+
+      List< size_t > & numList = (* it).second;
+      size_t sz = numList.size();
+      maxLen = std::max(sz, maxLen);
+
+      LIter< size_t > beginNum = numList.begin();
+
+      if (!firstNum)
+      {
+        numbers.insert(beginNum, lastNumIter);
+        ++lastNumIter;
+      }
+      else
+      {
+        numbers.addFirst(beginNum);
+        lastNumIter = numbers.begin();
+        firstNum = false;
+      }
     }
     out << '\n';
+
+    outputNumbers(out, maxLen, numbers);
   }
 }
 
@@ -391,10 +482,7 @@ int main()
   }
   else
   {
-    std::cout << "ыыыыыыы";
+    std::cout << '0';
   }
-  
-  
-
   return 0;
 }
