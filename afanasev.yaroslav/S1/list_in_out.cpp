@@ -41,6 +41,8 @@ namespace afanasev
 
             out << * current;
 
+            out << '\n';
+
             if (rowSum > std::numeric_limits< size_t >::max() - * current)
             {
               throw std::overflow_error("Overflow");
@@ -50,7 +52,7 @@ namespace afanasev
             ++current;
           }
         }
-        out << '\n';
+
 
         if (firstSum)
         {
