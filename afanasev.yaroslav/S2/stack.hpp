@@ -7,14 +7,17 @@ namespace afanasev
 	class Stack
 	{
 	 public:
-	  void push(const T &rhs);
-    T &get() noexcept;
+	  void push(const T & rhs);
+    T & get() noexcept;
     void pop() noexcept;
     bool empty() const noexcept;
     size_t size() const noexcept;
 
 		void push(T rhs);
 		T drop();
+
+	 private:
+    List< T > data_;
   };
 }
 
