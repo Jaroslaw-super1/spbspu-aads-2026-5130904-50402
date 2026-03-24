@@ -4,7 +4,7 @@
 
 namespace afanasev
 {
-  template< typename T >
+  template< class T >
 	class Stack
 	{
 	 public:

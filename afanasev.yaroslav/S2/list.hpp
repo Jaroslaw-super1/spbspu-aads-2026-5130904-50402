@@ -38,7 +38,7 @@ namespace afanasev
     T getValue(LIter< T > pos) noexcept;
     T getValue(LCIter< T > pos) const noexcept;
     void pushFront(const T & val);
-    T popFront();
+    void popFront();
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
@@ -97,18 +97,17 @@ namespace afanasev
   }
 
   template < class T >
-  T List< T >::popFront()
+  void List< T >::popFront()
   {
     if (!size_)
     {
-      return nullptr;
+      throw std::out_of_range("list is empty");;
     }
     Node< T > * first = fake_->next_;
-    T value = first->val_;
+
     fake_->next_ = first->next_;
     delete first;
     --size_;
-    return value;
   }
 
   template < class T >

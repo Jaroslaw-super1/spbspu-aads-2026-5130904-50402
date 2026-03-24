@@ -1,10 +1,11 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
+#include <stdexcept>
 #include "list.hpp"
 
 namespace afanasev
 {
-  template< typename T >
+  template< class T >
   class Queue
   {
    public:
@@ -29,9 +30,12 @@ void afanasev::Queue< T >::push(const T & rhs)
   else
   {
     LIter< T > last = data_.begin();
-    while (last.curr_->next_)
+    LIter< T > next = last;
+    ++next;
+    while (next != LIter< T >())
     {
-      ++last;
+      last = next;
+      ++next;
     }
     data_.insert(rhs, last);
   }
