@@ -1,5 +1,6 @@
 #ifndef STACK_HPP
 #define STACK_HPP
+#include "list.hpp"
 
 namespace afanasev
 {
@@ -29,7 +30,7 @@ T & afanasev::Stack< T >::get()
 {
   if (empty())
   {
-    throw std::out_of_range("Stack::get(): stack is empty");
+    throw std::out_of_range("stack is empty");
   }
   return *data_.begin();
 }
