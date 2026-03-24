@@ -37,11 +37,13 @@ void afanasev::Queue< T >::pop() noexcept
 template < class T >
 bool afanasev::Queue< T >::empty() const noexcept
 {
+  return !data_.size();
 }
 
 template < class T >
 size_t afanasev::Queue< T >::size() const noexcept
 {
+  return data_.size();
 }
 
 #endif

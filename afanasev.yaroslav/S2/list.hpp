@@ -17,7 +17,7 @@ namespace afanasev
   template< class T >
   class Node
   {
-  public:
+   public:
     T val_;
     Node< T > * next_;
   };
@@ -28,7 +28,7 @@ namespace afanasev
     Node< T > * fake_;
     size_t size_;
 
-  public:
+   public:
     List();
     ~List();
 
