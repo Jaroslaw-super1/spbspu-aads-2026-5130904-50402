@@ -66,10 +66,93 @@ bool afanasev::getPriority(const std::string & op1, const std::string & op2)
   return pr1 >= pr2;
 }
 
+Queue< std::string > convert(Queue< std::string > inf)
+{
 
+}
 
+long long calc(const std::string & op, long long a, long long b)
+{
+	if (op == "+")
+	{
+    if (a > 0 && b > 0 && a > std::numeric_limits<long long>::max() - b)
+		{
+      throw std::overflow_error("overflow in addition");
+		}
+    if (a < 0 && b < 0 && a < std::numeric_limits<long long>::min() - b)
+		{
+      throw std::underflow_error("underflow in addition");
+		}
+    return a + b;
+  }
 
+  if (op == "-")
+	{
+    if (b > 0 && a < std::numeric_limits<long long>::min() + b)
+		{
+      throw std::underflow_error("underflow in subtraction");
+		}
+    if (b < 0 && a > std::numeric_limits<long long>::max() + b)
+		{
+      throw std::overflow_error("overflow in subtraction");
+		}
+    return a - b;
+  }
 
+  if (op == "*")
+	{
+    if (!a || !b)
+		{
+			return 0;
+		}
+    if (a > 0 && b > 0 && a > std::numeric_limits<long long>::max() / b)
+    {
+			throw std::overflow_error("overflow in multiplication");
+		}
+    if (a > 0 && b < 0 && b < std::numeric_limits<long long>::min() / a)
+    {
+			throw std::overflow_error("overflow in multiplication");
+		}
+    if (a < 0 && b > 0 && a < std::numeric_limits<long long>::min() / b)
+    {
+			throw std::overflow_error("overflow in multiplication");
+		}
+    if (a < 0 && b < 0 && a / b > 0 && (a / b) > std::numeric_limits<long long>::max() / b)
+    {
+			throw std::overflow_error("overflow in multiplication");
+		}
+    return a * b;
+  }
+
+  if (op == "/")
+	{
+    if (!b)
+		{
+			throw std::logic_error("division by zero");
+		}
+    return a / b;
+  }
+
+  if (op == "%")
+	{
+    if (!b)
+		{
+			throw std::logic_error("modulo by zero");
+		}
+    return (a % b + b) % b;
+  }
+  
+	if (op == "gcd")
+	{
+    return gcd(a, b);
+  }
+  throw std::runtime_error("unknown operator: " + op);
+}
+
+long long calcExpr(Queue< std::string > postfix)
+{
+
+}
 
 long long gcd(long long a, long long b)
 {
