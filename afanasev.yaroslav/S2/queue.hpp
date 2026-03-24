@@ -9,7 +9,7 @@ namespace afanasev
   {
    public:
     void push(const T & rhs);
-    T & get() noexcept;
+    T & get();
     void pop() noexcept;
     bool empty() const noexcept;
     size_t size() const noexcept;
@@ -38,7 +38,7 @@ void afanasev::Queue< T >::push(const T & rhs)
 }
 
 template < class T >
-T & afanasev::Queue< T >::get() noexcept
+T & afanasev::Queue< T >::get()
 {
   if (empty())
   {
