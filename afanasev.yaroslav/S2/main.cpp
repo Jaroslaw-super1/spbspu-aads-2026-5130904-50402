@@ -28,5 +28,38 @@ int main(int argc, char * argv[])
 
   afanasev::Stack< long long > res;
 
+  try
+  {
+
+  }
+  catch (const std::exception & e)
+  {
+    std::cerr << e.what() << '\n';
+    return 1;
+  }
+
+
+
+
+
+  if (!res.empty())
+  {
+    std::cout << res.get();
+    res.pop();
+  }
+  else
+  {
+    std::cerr << "file is empty\n";
+    return 1;
+  }
+
+  while (!res.empty())
+  {
+    std::cout << ' ' << res.get();
+    res.pop();
+  }
+
+  std::cout << '\n';
+
   return 0;
 }
