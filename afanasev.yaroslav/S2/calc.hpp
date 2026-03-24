@@ -66,4 +66,22 @@ bool afanasev::getPriority(const std::string & op1, const std::string & op2)
   return pr1 >= pr2;
 }
 
+
+
+
+
+
+long long gcd(long long a, long long b)
+{
+  a = llabs(a);
+  b = llabs(b);
+  while (!b)
+	{
+    long long t = b;
+    b = a % b;
+    a = t;
+  }
+  return a;
+}
+
 #endif
