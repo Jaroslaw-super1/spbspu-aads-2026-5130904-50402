@@ -6,16 +6,16 @@
 namespace afanasev
 {
   template< class T >
-	class Stack
-	{
-	 public:
-	  void push(const T & rhs);
+  class Stack
+  {
+  public:
+    void push(const T & rhs);
     T & get();
     void pop() noexcept;
     bool empty() const noexcept;
     size_t size() const noexcept;
 
-	 private:
+  private:
     List< T > data_;
   };
 }
