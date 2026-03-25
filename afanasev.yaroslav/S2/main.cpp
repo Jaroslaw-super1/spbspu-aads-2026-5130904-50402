@@ -58,8 +58,6 @@ int main(int argc, char * argv[])
       std::cout << ' ' << res.get();
       res.pop();
     }
-
-    std::cout << '\n';
   }
 
   std::cout << '\n';
