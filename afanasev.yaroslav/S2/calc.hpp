@@ -39,47 +39,94 @@ bool afanasev::getPriority(const std::string & op1, const std::string & op2)
 
   if (op1 == "gcd")
 	{
-		pr1 = 3
+		pr1 = 3;
 	}
   else if (op1 == "*" || op1 == "/" || op1 == "%")
 	{
-		pr1 = 2
+		pr1 = 2;
 	}
   else if (op1 == "+" || op1 == "-")
 	{
-		pr1 = 1
+		pr1 = 1;
 	}
 
   if (op2 == "gcd")
 	{
-		pr2 = 3
+		pr2 = 3;
 	}
   else if (op2 == "*" || op2 == "/" || op2 == "%")
 	{
-		pr2 = 2
+		pr2 = 2;
 	}
   else if (op2 == "+" || op2 == "-")
 	{
-		pr2 = 1
+		pr2 = 1;
 	}
 
   return pr1 >= pr2;
 }
 
-Queue< std::string > convert(Queue< std::string > inf)
+afanasev::Queue< std::string > afanasev::convert(Queue< std::string > inf)
 {
+  Queue< std::string > out;
+  Stack< std::string > tmp;
 
+  while (!inf.empty())
+  {
+    std::string tk = inf.get();
+    inf.pop();
+
+    if (tk == "(")
+    {
+      tmp.push(tk);
+    }
+    else if (isOpt(tk))
+    {
+      while (!tmp.empty() && tmp.get() != "(" && getPriority(tmp.get(), tk))
+      {
+        out.push(tmp.get());
+        tmp.pop();
+      }
+
+      tmp.push(tk);
+    }
+    else if (tk == ")")
+    {
+      while (!tmp.empty() && tmp.get() != "(")
+      {
+        out.push(tmp.get());
+        tmp.pop();
+      }
+
+      if (!tmp.empty() && tmp.get() == "(")
+      {
+        tmp.pop();
+      }
+    }
+    else
+    {
+      out.push(tk);
+    }
+  }
+
+  while (!tmp.empty())
+  {
+    out.push(tmp.get());
+    tmp.pop();
+  }
+
+  return out;
 }
 
-long long calc(const std::string & op, long long a, long long b)
+long long afanasev::calc(const std::string & op, long long a, long long b)
 {
 	if (op == "+")
 	{
-    if (a > 0 && b > 0 && a > std::numeric_limits<long long>::max() - b)
+    if (a > 0 && b > 0 && a > std::numeric_limits< long long >::max() - b)
 		{
       throw std::overflow_error("overflow in addition");
 		}
-    if (a < 0 && b < 0 && a < std::numeric_limits<long long>::min() - b)
+    if (a < 0 && b < 0 && a < std::numeric_limits< long long >::min() - b)
 		{
       throw std::underflow_error("underflow in addition");
 		}
@@ -88,11 +135,11 @@ long long calc(const std::string & op, long long a, long long b)
 
   if (op == "-")
 	{
-    if (b > 0 && a < std::numeric_limits<long long>::min() + b)
+    if (b > 0 && a < std::numeric_limits< long long >::min() + b)
 		{
       throw std::underflow_error("underflow in subtraction");
 		}
-    if (b < 0 && a > std::numeric_limits<long long>::max() + b)
+    if (b < 0 && a > std::numeric_limits< long long >::max() + b)
 		{
       throw std::overflow_error("overflow in subtraction");
 		}
@@ -105,19 +152,19 @@ long long calc(const std::string & op, long long a, long long b)
 		{
 			return 0;
 		}
-    if (a > 0 && b > 0 && a > std::numeric_limits<long long>::max() / b)
+    if (a > 0 && b > 0 && a > std::numeric_limits< long long >::max() / b)
     {
 			throw std::overflow_error("overflow in multiplication");
 		}
-    if (a > 0 && b < 0 && b < std::numeric_limits<long long>::min() / a)
+    if (a > 0 && b < 0 && b < std::numeric_limits< long long >::min() / a)
     {
 			throw std::overflow_error("overflow in multiplication");
 		}
-    if (a < 0 && b > 0 && a < std::numeric_limits<long long>::min() / b)
+    if (a < 0 && b > 0 && a < std::numeric_limits< long long >::min() / b)
     {
 			throw std::overflow_error("overflow in multiplication");
 		}
-    if (a < 0 && b < 0 && a / b > 0 && (a / b) > std::numeric_limits<long long>::max() / b)
+    if (a < 0 && b < 0 && a / b > 0 && (a / b) > std::numeric_limits< long long >::max() / b)
     {
 			throw std::overflow_error("overflow in multiplication");
 		}
@@ -149,16 +196,16 @@ long long calc(const std::string & op, long long a, long long b)
   throw std::runtime_error("unknown operator: " + op);
 }
 
-long long calcExpr(Queue< std::string > postfix)
+long long afanasev::calcExpr(Queue< std::string > postfix)
 {
 
 }
 
-long long gcd(long long a, long long b)
+long long afanasev::gcd(long long a, long long b)
 {
   a = llabs(a);
   b = llabs(b);
-  while (!b)
+  while (b)
 	{
     long long t = b;
     b = a % b;
