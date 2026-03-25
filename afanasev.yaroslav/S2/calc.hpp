@@ -198,7 +198,41 @@ long long afanasev::calc(const std::string & op, long long a, long long b)
 
 long long afanasev::calcExpr(Queue< std::string > postfix)
 {
+  Stack<long long> st;
 
+  while (!postfix.empty())
+  {
+    std::string tk = postfix.get();
+    postfix.pop();
+
+    if (isOpt(tk))
+    {
+      if (st.empty())
+      {
+        throw std::runtime_error("not enough operands");
+      }
+      long long b = st.get();
+      st.pop();
+
+      if (st.empty())
+      {
+        throw std::runtime_error("not enough operands");
+      }
+      long long a = st.get();
+      st.pop();
+      st.push(calc(tk, a, b));
+    }
+    else
+    {
+      st.push(std::stoll(tk));
+    }
+  }
+
+  if (st.empty())
+  {
+    throw std::runtime_error("empty expression");
+  }
+  return st.get();
 }
 
 long long afanasev::gcd(long long a, long long b)
