@@ -9,7 +9,7 @@
 
 namespace afanasev
 {
-	template < class T, class H = boost::hash2::siphash_64 >
+  template < class T, class H = boost::hash2::siphash_64 >
   struct Hasher
   {
     size_t operator()(const T & value) const;

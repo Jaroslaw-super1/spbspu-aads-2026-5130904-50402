@@ -8,15 +8,27 @@
 #include <list.hpp>
 #include <top-it-vector.hpp>
 #include "HashFunction.hpp"
+#include "HashIter.hpp"
 
 namespace afanasev
 {
   template< class Key, class Value, class Hash, class Equal >
   class HashTable
   {
+    friend class HashIter< Key, Value, Hash, Equal >;
+    friend class HashConstIter< Key, Value, Hash, Equal >;
+
     using type = std::pair< Key, Value >;
 
     public:
+    using HIter = HashIter< Key, Value, Hash, Equal >;
+    using HCIter = HashConstIter< Key, Value, Hash, Equal >;
+
+    HIter begin();
+    HIter end();
+    HCIter cbegin() const;
+    HCIter cend() const;
+
     explicit HashTable(size_t slots);
     HashTable(const HashTable & other);
     HashTable(HashTable && other) noexcept;
