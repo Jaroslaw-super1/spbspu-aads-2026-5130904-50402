@@ -11,35 +11,35 @@
 
 namespace afanasev
 {
-	template< class Key, class Value, class Hash, class Equal >
-	class HashTable
-	{
-		using type = std::pair< Key, Value >;
+  template< class Key, class Value, class Hash, class Equal >
+  class HashTable
+  {
+    using type = std::pair< Key, Value >;
 
-		public:
+    public:
 
-		explicit HashTable(size_t slots);
+    explicit HashTable(size_t slots);
     ~HashTable();
 
-		void clear() noexcept;
+    void clear() noexcept;
 
 
-		void add(Key k, Value v);
-		Value drop(Key k);
-		bool has(Key k) const noexcept;
-		void rehash(size_t slots);
+    void add(Key k, Value v);
+    Value drop(Key k);
+    bool has(Key k) const noexcept;
+    void rehash(size_t slots);
 
     size_t size() const noexcept;
     bool empty() const noexcept;
 
-		private:
+    private:
 
     Vector< List< type > > data_;
     size_t capacity_;
     size_t size_;
     Hash hasher_;
-		Equal comparator_;
-	};
+    Equal comparator_;
+  };
 }
 template < class Key, class Value, class Hash, class Equal >
 size_t afanasev::HashTable< Key, Value, Hash, Equal >::size() const noexcept
@@ -139,9 +139,9 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   LIter< type > it = bucket.begin();
 
   while (it != LIter< type >())
-	{
+  {
     if (comparator_((*it).first, k))
-		{
+    {
       (*it).second = v;
       return;
     }
@@ -156,7 +156,7 @@ template < class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < capacity_; ++i)
-	{
+  {
     data_[i].clear();
   }
 
@@ -172,7 +172,7 @@ afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   comparator_(Equal{})
 {
   for (size_t i = 0; i < slots; ++i)
-	{
+  {
     data_.pushBack(List< type >());
   }
 }

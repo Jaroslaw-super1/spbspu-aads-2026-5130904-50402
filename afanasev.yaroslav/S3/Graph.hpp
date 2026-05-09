@@ -5,8 +5,7 @@ namespace afanasev
 {
 	class Graph
 	{
-
-  };
+	};
 }
 
 #endif
