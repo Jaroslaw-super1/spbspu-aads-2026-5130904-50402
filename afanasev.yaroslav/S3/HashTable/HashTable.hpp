@@ -102,7 +102,8 @@ afanasev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable && other) no
 {
   if (this != & other)
   {
-    swap(other);
+    HashTable tmp(std::move(other));
+    swap(tmp);
   }
   return *this;
 }
