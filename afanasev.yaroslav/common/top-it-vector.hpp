@@ -9,7 +9,7 @@
 #include <utility>
 #include <memory>
 
-namespace topit
+namespace afanasev
 {
   template <class T>
   struct VIter;
@@ -108,14 +108,14 @@ namespace topit
 
 
 template < class T >
-void topit::Vector< T >::pushBackImpl(const T & value)
+void afanasev::Vector< T >::pushBackImpl(const T & value)
 {
   data_[size_] = value;
   ++size_;
 }
 
 template < class T >
-void topit::Vector< T >::reserve(size_t pos, size_t k)
+void afanasev::Vector< T >::reserve(size_t pos, size_t k)
 {
   size_t new_cap = std::max(capacity_, size_ + k);
   if (new_cap == capacity_)
@@ -147,7 +147,7 @@ void topit::Vector< T >::reserve(size_t pos, size_t k)
 }
 
 template < class T >
-void topit::Vector< T >::insert(size_t i, const T & val)
+void afanasev::Vector< T >::insert(size_t i, const T & val)
 {
   assert(i <= size_);
   if (size_ == capacity_)
@@ -164,7 +164,7 @@ void topit::Vector< T >::insert(size_t i, const T & val)
 }
 
 template < class T >
-void topit::Vector< T >::erase(size_t i)
+void afanasev::Vector< T >::erase(size_t i)
 {
   assert(i < size_);
   for (size_t j = i + 1; j < size_; ++j)
@@ -175,7 +175,7 @@ void topit::Vector< T >::erase(size_t i)
 }
 
 template < class T >
-void topit::Vector< T >::insert(size_t i, const Vector< T > & rhs, size_t beg, size_t end)
+void afanasev::Vector< T >::insert(size_t i, const Vector< T > & rhs, size_t beg, size_t end)
 {
   assert(i <= size_);
   assert(beg <= end && end <= rhs.size_);
@@ -198,7 +198,7 @@ void topit::Vector< T >::insert(size_t i, const Vector< T > & rhs, size_t beg, s
 }
 
 template < class T >
-void topit::Vector< T >::erase(size_t beg, size_t end)
+void afanasev::Vector< T >::erase(size_t beg, size_t end)
 {
   assert(beg <= end && end <= size_);
   size_t count = end - beg;
@@ -211,7 +211,7 @@ void topit::Vector< T >::erase(size_t beg, size_t end)
 
 template < class T >
 template < class FwdIterator >
-void topit::Vector< T >::insert(VIter< T > pos, FwdIterator beg, FwdIterator end)
+void afanasev::Vector< T >::insert(VIter< T > pos, FwdIterator beg, FwdIterator end)
 {
   size_t cnt = 0;
   auto cpyBeg = beg;
@@ -251,13 +251,13 @@ void topit::Vector< T >::insert(VIter< T > pos, FwdIterator beg, FwdIterator end
 }
 
 template < class T >
-void topit::Vector< T >::insert(VIter< T > pos, const T & value)
+void afanasev::Vector< T >::insert(VIter< T > pos, const T & value)
 {
   insert(pos.pos_, value);
 }
 
 template < class T >
-void topit::Vector< T >::insert(const T & value, size_t count, VIter< T > pos)
+void afanasev::Vector< T >::insert(const T & value, size_t count, VIter< T > pos)
 {
   assert(& pos.v_ == this);
   size_t index = pos.pos_;
@@ -288,7 +288,7 @@ void topit::Vector< T >::insert(const T & value, size_t count, VIter< T > pos)
 }
 
 template < class T >
-void topit::Vector< T >::erase(VIter< T > beg, VIter< T > end)
+void afanasev::Vector< T >::erase(VIter< T > beg, VIter< T > end)
 {
   assert(& beg.v_ == this && & end.v_ == this);
   size_t b = beg.pos_;
@@ -309,7 +309,7 @@ void topit::Vector< T >::erase(VIter< T > beg, VIter< T > end)
 }
 
 template < class T >
-void topit::Vector< T >::erase(VIter< T > pos)
+void afanasev::Vector< T >::erase(VIter< T > pos)
 {
   assert(& pos.v_ == this);
   size_t index = pos.pos_;
@@ -323,7 +323,7 @@ void topit::Vector< T >::erase(VIter< T > pos)
 }
 
 template < class T >
-void topit::Vector< T >::erase(VIter< T > pos, size_t count)
+void afanasev::Vector< T >::erase(VIter< T > pos, size_t count)
 {
   assert(& pos.v_ == this);
   size_t start = pos.pos_;
@@ -348,7 +348,7 @@ void topit::Vector< T >::erase(VIter< T > pos, size_t count)
 
 template < class T >
 template < class IT >
-void topit::Vector< T >::pushBackRange(IT begin, size_t k)
+void afanasev::Vector< T >::pushBackRange(IT begin, size_t k)
 {
   if (size_ + k > capacity_)
   {
@@ -366,51 +366,51 @@ void topit::Vector< T >::pushBackRange(IT begin, size_t k)
 
 
 template < class T >
-topit::VIter< T >::VIter(Vector< T > & v, size_t pos):
+afanasev::VIter< T >::VIter(Vector< T > & v, size_t pos):
   v_(v),
   pos_(pos)
 {}
 
 template< class T >
-bool topit::VIter< T >::operator==(const VIter< T > & other) const noexcept
+bool afanasev::VIter< T >::operator==(const VIter< T > & other) const noexcept
 {
   return & v_ == & other.v_ && pos_ == other.pos_;
 }
 
 template< class T >
-bool topit::VIter< T >::operator!=(const VIter< T > & other) const noexcept
+bool afanasev::VIter< T >::operator!=(const VIter< T > & other) const noexcept
 {
   return !(*this == other);
 }
 
 template< class T >
-topit::VIter< T > & topit::VIter< T >::operator++() noexcept
+afanasev::VIter< T > & afanasev::VIter< T >::operator++() noexcept
 {
   ++pos_;
   return *this;
 }
 
 template< class T >
-topit::VIter< T > & topit::VIter< T >::operator--() noexcept
+afanasev::VIter< T > & afanasev::VIter< T >::operator--() noexcept
 {
   --pos_;
   return *this;
 }
 
 template< class T >
-topit::VIter< T > topit::VIter< T >::operator+(size_t i) noexcept
+afanasev::VIter< T > afanasev::VIter< T >::operator+(size_t i) noexcept
 {
   return VIter(v_, pos_ + i);
 }
 
 template< class T >
-topit::VIter< T > topit::VIter< T >::operator-(size_t i) noexcept
+afanasev::VIter< T > afanasev::VIter< T >::operator-(size_t i) noexcept
 {
   return VIter(v_, pos_ - i);
 }
 
 template< class T >
-T & topit::VIter< T >::operator*()
+T & afanasev::VIter< T >::operator*()
 {
   return v_[pos_];
 }
@@ -422,7 +422,7 @@ T & topit::VIter< T >::operator*()
 
 
 template< class T >
-void topit::Vector< T >::reserve(size_t k)
+void afanasev::Vector< T >::reserve(size_t k)
 {
   if (capacity_ >= k)
   {
@@ -448,7 +448,7 @@ void topit::Vector< T >::reserve(size_t k)
 }
 
 template< class T >
-topit::Vector< T >::Vector(std::initializer_list< T > il):
+afanasev::Vector< T >::Vector(std::initializer_list< T > il):
   Vector(il.size())
 {
   size_t i = 0;
@@ -460,7 +460,7 @@ topit::Vector< T >::Vector(std::initializer_list< T > il):
 }
 
 template< class T >
-T & topit::Vector< T >::at(size_t id)
+T & afanasev::Vector< T >::at(size_t id)
 {
   const Vector< T > * cthis = this;
   const T & ret = cthis->at(id);
@@ -468,7 +468,7 @@ T & topit::Vector< T >::at(size_t id)
 }
 
 template< class T >
-const T & topit::Vector< T >::at(size_t id) const
+const T & afanasev::Vector< T >::at(size_t id) const
 {
   if (id < getSize())
   {
@@ -478,7 +478,7 @@ const T & topit::Vector< T >::at(size_t id) const
 }
 
 template< class T >
-topit::Vector< T >::Vector(Vector< T > && rhs) noexcept :
+afanasev::Vector< T >::Vector(Vector< T > && rhs) noexcept :
   data_(rhs.data_),
   size_(rhs.size_),
   capacity_(rhs.capacity_)
@@ -487,7 +487,7 @@ topit::Vector< T >::Vector(Vector< T > && rhs) noexcept :
 }
 
 template< class T >
-topit::Vector< T > & topit::Vector<T>::operator=(Vector< T > && rhs) noexcept
+afanasev::Vector< T > & afanasev::Vector<T>::operator=(Vector< T > && rhs) noexcept
 {
   Vector< T > cpy(std::move(rhs));
   swap(cpy);
@@ -495,7 +495,7 @@ topit::Vector< T > & topit::Vector<T>::operator=(Vector< T > && rhs) noexcept
 }
 
 template< class T >
-void topit::Vector< T >::pushBack(const T & value)
+void afanasev::Vector< T >::pushBack(const T & value)
 {
   if (size_ == capacity_)
   {
@@ -514,14 +514,14 @@ void topit::Vector< T >::pushBack(const T & value)
 }
 
 template< class T >
-void topit::Vector< T >::popBack()
+void afanasev::Vector< T >::popBack()
 {
   assert(!isEmpety());
   --size_;
 }
 
 template< class T >
-void topit::Vector< T >::popFront()
+void afanasev::Vector< T >::popFront()
 {
   assert(!isEmpety());
   for (size_t i = 1; i < size_; ++i)
@@ -532,7 +532,7 @@ void topit::Vector< T >::popFront()
 }
 
 template< class T >
-void topit::Vector< T >::pushFront(const T & val)
+void afanasev::Vector< T >::pushFront(const T & val)
 {
   Vector< T > cpy(val.getSize() + 1);
 
@@ -545,7 +545,7 @@ void topit::Vector< T >::pushFront(const T & val)
 }
 
 template< class T >
-void topit::Vector< T >::swap(Vector< T > & rhs) noexcept
+void afanasev::Vector< T >::swap(Vector< T > & rhs) noexcept
 {
   std::swap(rhs.data_, data_);
   std::swap(rhs.size_, size_);
@@ -553,7 +553,7 @@ void topit::Vector< T >::swap(Vector< T > & rhs) noexcept
 }
 
 template< class T >
-topit::Vector< T > & topit::Vector< T >::operator=(const Vector< T > & rhs)
+afanasev::Vector< T > & afanasev::Vector< T >::operator=(const Vector< T > & rhs)
 {
   if (this == std::addressof(rhs))
   {
@@ -565,14 +565,14 @@ topit::Vector< T > & topit::Vector< T >::operator=(const Vector< T > & rhs)
 }
 
 template< class T >
-topit::Vector< T >::Vector(size_t k):
+afanasev::Vector< T >::Vector(size_t k):
   data_(new T[k]),
   size_(0),
   capacity_(k)
 {}
 
 template< class T >
-topit::Vector< T >::Vector(const Vector< T > & rhs):
+afanasev::Vector< T >::Vector(const Vector< T > & rhs):
   Vector(rhs.getSize())
 {
   for (size_t i = 0; i < getSize(); i++)
@@ -582,19 +582,19 @@ topit::Vector< T >::Vector(const Vector< T > & rhs):
 }
 
 template< class T >
-size_t topit::Vector< T >::getSize() const noexcept
+size_t afanasev::Vector< T >::getSize() const noexcept
 {
   return size_;
 }
 
 template< class T >
-bool topit::Vector< T >::isEmpety() const noexcept
+bool afanasev::Vector< T >::isEmpety() const noexcept
 {
   return !size_;
 }
 
 template< class T >
-T & topit::Vector< T >::operator[](size_t id) noexcept
+T & afanasev::Vector< T >::operator[](size_t id) noexcept
 {
   const Vector< T > * a = this;
   const T & b = (* a)[id];
@@ -602,21 +602,21 @@ T & topit::Vector< T >::operator[](size_t id) noexcept
 }
 
 template< class T >
-const T & topit::Vector< T >::operator[](size_t id) const noexcept
+const T & afanasev::Vector< T >::operator[](size_t id) const noexcept
 {
   assert(id < getSize());
   return data_[id];
 }
 
 template< class T >
-topit::Vector< T >::Vector():
+afanasev::Vector< T >::Vector():
   data_(nullptr),
   size_(0),
   capacity_(0)
 {}
 
 template< class T >
-topit::Vector< T >::~Vector()
+afanasev::Vector< T >::~Vector()
 {
   delete[] data_;
 }
