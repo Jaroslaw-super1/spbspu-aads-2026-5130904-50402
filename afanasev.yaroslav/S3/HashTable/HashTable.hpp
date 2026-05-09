@@ -21,6 +21,9 @@ namespace afanasev
 		explicit HashTable(size_t slots);
     ~HashTable();
 
+		void clear() noexcept;
+
+
 		void add(Key k, Value v);
 		Value drop(Key k);
 		bool has(Key k);
@@ -34,6 +37,23 @@ namespace afanasev
     Hash hasher_;
 		Equal comparator_;
 	};
+}
+
+template < class Key, class Value, class Hash, class Equal >
+void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
+{
+  for (size_t i = 0; i < capacity_; ++i)
+	{
+    data_[i].clear();
+  }
+
+  size_ = 0;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+afanasev::HashTable< Key, Value, Hash, Equal >::~HashTable()
+{
+  clear();
 }
 
 template < class Key, class Value, class Hash, class Equal >
