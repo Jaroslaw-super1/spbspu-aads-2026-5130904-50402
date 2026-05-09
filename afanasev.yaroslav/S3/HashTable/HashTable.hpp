@@ -39,6 +39,27 @@ namespace afanasev
 	};
 }
 
+template <class Key, class Value, class Hash, class Equal>
+void afanasev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
+{
+  size_t idx = hasher_(k) % capacity_;
+  List<type> & bucket = data_[idx];
+  LIter<type> it = bucket.begin();
+
+  while (it != LIter<type>())
+	{
+    if (comparator_((*it).first, k))
+		{
+      (*it).second = v;
+      return;
+    }
+    ++it;
+  }
+
+  bucket.pushFront(type(k, v));
+  ++size_;
+}
+
 template < class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
