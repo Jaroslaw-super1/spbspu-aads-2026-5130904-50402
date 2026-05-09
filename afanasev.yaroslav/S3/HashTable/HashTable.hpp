@@ -26,7 +26,7 @@ namespace afanasev
 
 		void add(Key k, Value v);
 		Value drop(Key k);
-		bool has(Key k);
+		bool has(Key k) const noexcept;
 		void rehash(size_t slots);
 
 		private:
@@ -39,20 +39,68 @@ namespace afanasev
 	};
 }
 
-template <class Key, class Value, class Hash, class Equal>
-Value afanasev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
+template < class Key, class Value, class Hash, class Equal >
+void afanasev::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{
+  if (slots <= capacity_)
+  {
+    return;
+  }
+
+  Vector< List < type > > new_data;
+
+  for (size_t i = 0; i < slots; ++i)
+  {
+    new_data.pushBack(List< type >());
+  }
+
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    List< type > & bucket = data_[i];
+    LIter< type > it = bucket.begin();
+
+    while (it != LIter< type >())
+    {
+      size_t new_idx = hasher_((*it).first) % slots;
+      new_data[new_idx].pushFront(*it);
+      ++it;
+    }
+  }
+
+  data_ = std::move(new_data);
+  capacity_ = slots;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+bool afanasev::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
   size_t idx = hasher_(k) % capacity_;
-  List<type> & bucket = data_[idx];
-  LIter<type> prev = LIter<type>();
-  LIter<type> it = bucket.begin();
+  const List< type > & bucket = data_[idx];
+  LCIter< type > it = bucket.begin();
 
-  while (it != LIter<type>())
+  while (it != LCIter< type >())
+  {
+    if (comparator_((*it).first, k)) return true;
+    ++it;
+  }
+
+  return false;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value afanasev::HashTable< Key, Value, Hash, Equal >::drop(Key k)
+{
+  size_t idx = hasher_(k) % capacity_;
+  List< type > & bucket = data_[idx];
+  LIter< type > prev = LIter< type >();
+  LIter< type > it = bucket.begin();
+
+  while (it != LIter< type >())
   {
     if (comparator_((*it).first, k))
     {
       Value val = (*it).second;
-      if (prev == LIter<type>())
+      if (prev == LIter< type >())
       {
         bucket.popFront();
       }
@@ -69,14 +117,14 @@ Value afanasev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
   throw std::out_of_range("Key not found");
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void afanasev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
+template < class Key, class Value, class Hash, class Equal >
+void afanasev::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
-  List<type> & bucket = data_[idx];
-  LIter<type> it = bucket.begin();
+  List< type > & bucket = data_[idx];
+  LIter< type > it = bucket.begin();
 
-  while (it != LIter<type>())
+  while (it != LIter< type >())
 	{
     if (comparator_((*it).first, k))
 		{
