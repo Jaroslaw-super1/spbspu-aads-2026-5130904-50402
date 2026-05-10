@@ -6,7 +6,6 @@
 #include <string>
 #include <limits>
 
-
 namespace afanasev
 {
   template< class T > class Node;
@@ -109,7 +108,6 @@ namespace afanasev
     --size_;
   }
 
-  
 
   template < class T >
   void List< T >::insert(const T & val, LIter< T > pos)
@@ -273,7 +271,6 @@ namespace afanasev
   {
     return curr_ != other.curr_;
   }
-
 
   template < class T >
   class LCIter

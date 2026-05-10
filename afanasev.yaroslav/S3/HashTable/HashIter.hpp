@@ -142,7 +142,6 @@ afanasev::HashIter< Key, Value, Hash, Equal >::operator*() const
   return *listIt_;
 }
 
-
 template < class Key, class Value, class Hash, class Equal >
 afanasev::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
   data_(nullptr),
@@ -159,7 +158,7 @@ afanasev::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(const Vector< 
   idx_(start_idx),
   listIt_()
 {
-    findValid();
+  findValid();
 }
 
 template < class Key, class Value, class Hash, class Equal >
