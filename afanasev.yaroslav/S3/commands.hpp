@@ -143,7 +143,7 @@ void afanasev::cmdOutbound(std::istream & in, std::ostream & out, GraphSet & gra
     sortedEdges[j] = key;
   }
 
-  if (sortedEdges.getSize() == 0)
+  if (!sortedEdges.getSize())
   {
     out << "\n";
   }
@@ -166,6 +166,53 @@ void afanasev::cmdOutbound(std::istream & in, std::ostream & out, GraphSet & gra
 
 void afanasev::cmdInbound(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
+  std::string g_name, v_name;
+  in >> g_name >> v_name;
+  Graph & g = graphs.get(g_name);
+  if (!g.hasVertex(v_name))
+  {
+    throw std::out_of_range("Vertex missing");
+  }
+
+  Vector< std::pair< std::string, int > > edges = g.getInEdges(v_name);
+  Vector< std::pair< std::string, size_t > > sortedEdges;
+  for (size_t i = 0; i < edges.getSize(); ++i)
+  {
+    sortedEdges.pushBack(std::make_pair(edges[i].first, static_cast< size_t >(edges[i].second)));
+  }
+
+  for (size_t i = 1; i < sortedEdges.getSize(); ++i)
+  {
+    std::pair< std::string, size_t > key = sortedEdges[i];
+    size_t j = i;
+    while ((j > 0) && ((sortedEdges[j - 1].first > key.first) ||
+           ((sortedEdges[j - 1].first == key.first) && (sortedEdges[j - 1].second > key.second))))
+    {
+      sortedEdges[j] = sortedEdges[j - 1];
+      --j;
+    }
+    sortedEdges[j] = key;
+  }
+
+  if (!sortedEdges.getSize())
+  {
+    out << "\n";
+  }
+  else
+  {
+    size_t idx = 0;
+    while (idx < sortedEdges.getSize())
+    {
+      const std::string & currentSrc = sortedEdges[idx].first;
+      out << currentSrc;
+      while ((idx < sortedEdges.getSize()) && (sortedEdges[idx].first == currentSrc))
+      {
+        out << " " << sortedEdges[idx].second;
+        ++idx;
+      }
+      out << "\n";
+    }
+  }
 }
 
 void afanasev::cmdBind(std::istream & in, std::ostream & out, GraphSet & graphs)
