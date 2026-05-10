@@ -100,7 +100,7 @@ void afanasev::cmdVertexes(std::istream & in, std::ostream & out, GraphSet & gra
 
   detail::sortStrings(verts);
 
-  if (verts.getSize() == 0)
+  if (!verts.getSize())
   {
     out << "\n";
   }
@@ -112,24 +112,78 @@ void afanasev::cmdVertexes(std::istream & in, std::ostream & out, GraphSet & gra
     }
   }
 }
+
 void afanasev::cmdOutbound(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
+  std::string g_name, v_name;
+  in >> g_name >> v_name;
+  Graph & g = graphs.get(g_name);
+  if (!g.hasVertex(v_name))
+  {
+    throw std::out_of_range("Vertex missing");
+  }
+
+  Vector< std::pair< std::string, int > > edges = g.getOutEdges(v_name);
+  Vector< std::pair< std::string, size_t > > sortedEdges;
+  for (size_t i = 0; i < edges.getSize(); ++i)
+  {
+    sortedEdges.pushBack(std::make_pair(edges[i].first, static_cast< size_t >(edges[i].second)));
+  }
+
+  for (size_t i = 1; i < sortedEdges.getSize(); ++i)
+  {
+    std::pair< std::string, size_t > key = sortedEdges[i];
+    size_t j = i;
+    while ((j > 0) && ((sortedEdges[j - 1].first > key.first) ||
+           ((sortedEdges[j - 1].first == key.first) && (sortedEdges[j - 1].second > key.second))))
+    {
+      sortedEdges[j] = sortedEdges[j - 1];
+      --j;
+    }
+    sortedEdges[j] = key;
+  }
+
+  if (sortedEdges.getSize() == 0)
+  {
+    out << "\n";
+  }
+  else
+  {
+    size_t idx = 0;
+    while (idx < sortedEdges.getSize())
+    {
+      const std::string & currentDest = sortedEdges[idx].first;
+      out << currentDest;
+      while ((idx < sortedEdges.getSize()) && (sortedEdges[idx].first == currentDest))
+      {
+        out << " " << sortedEdges[idx].second;
+        ++idx;
+      }
+      out << "\n";
+    }
+  }
 }
+
 void afanasev::cmdInbound(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
+
 void afanasev::cmdBind(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
+
 void afanasev::cmdCut(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
+
 void afanasev::cmdCreate(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
+
 void afanasev::cmdMerge(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
+
 void afanasev::cmdExtract(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
 }
