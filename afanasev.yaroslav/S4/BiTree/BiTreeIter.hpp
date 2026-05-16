@@ -1,5 +1,5 @@
-#ifndef HASH_ITERS_HPP
-#define HASH_ITERS_HPP
+#ifndef BITREE_ITER_HPP
+#define BITREE_ITER_HPP
 
 namespace afanasev
 {
