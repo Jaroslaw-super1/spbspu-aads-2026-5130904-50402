@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <utility>
+#include "BiTreeNode.hpp"
 #include "BiTreeIter.hpp"
 
 namespace afanasev
@@ -15,39 +16,6 @@ namespace afanasev
   template< class Key, class Value >
   class BSTConstIterator;
 
-  template< class Key, class Value >
-  struct NodeBiTree
-  {
-    Key key_;
-    Value val_;
-    NodeBiTree * left_, * right_;
-    NodeBiTree * parent_;
-
-    NodeBiTree(const Key & key, const Value & val, NodeBiTree * parent):
-      key_(key),
-      val_(val),
-      left_(nullptr),
-      right_(nullptr),
-      parent_(parent)
-    {}
-
-    NodeBiTree(Key && key, Value && val, NodeBiTree * parent):
-      key_(std::move(key)),
-      val_(std::move(val)),
-      left_(nullptr),
-      right_(nullptr),
-      parent_(parent)
-    {}
-
-    NodeBiTree():
-      key_(),
-      val_(),
-      left_(this),
-      right_(this),
-      parent_(nullptr)
-    {}
-  };
-
   template< class Key, class Value, class Compare = std::less< Key > >
   class BSTree
   {
@@ -55,17 +23,25 @@ namespace afanasev
 
     BSTree();
 
-    BSTree(const BSTree &) = delete;
-    BSTree & operator=(const BSTree &) = delete;
+    BSTree(const BSTree & other);
+    BSTree(BSTree && other) noexcept;
+
+    BSTree & operator=(const BSTree & other);
+    BSTree & operator=(BSTree && other) noexcept;
+
+    void swap(BSTree & other) noexcept;
 
     ~BSTree();
     void clear() noexcept;
-
-    size_t size() const;
+    
     void push(Key && k, Value && v);
     void push(const Key & k, const Value & v);
-    Value get(const Key & k) const;
+
     Value drop(const Key & k);
+    size_t size() const;
+
+    Value & get(const Key & k);
+    const Value & get(const Key & k) const;
 
     using iterator = BSTIterator< Key, Value >;
     using const_iterator = BSTConstIterator< Key, Value >;
@@ -92,9 +68,104 @@ namespace afanasev
     size_t size_;
     Compare comp_;
 
-    NodeBiTree< Key, Value > * findNode(const Key & k) const;
+    NodeBiTree< Key, Value > * findNode(const Key & k);
+    const NodeBiTree< Key, Value > * findNode(const Key & k) const;
     NodeBiTree< Key, Value > * fallLeft(NodeBiTree< Key, Value > * node) const;
+    void clearTree(NodeBiTree< Key, Value > * node) noexcept;
+    NodeBiTree< Key, Value > * clone(NodeBiTree< Key, Value > * src, NodeBiTree< Key, Value > * parent);
   };
+}
+
+template< class Key, class Value, class Compare >
+typename afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
+clone(NodeBiTree< Key, Value > * src, NodeBiTree< Key, Value > * parent)
+{
+  if (src == &sentinel_)
+  {
+    return &sentinel_;
+  }
+
+  NodeBiTree< Key, Value > * newNode = new NodeBiTree< Key, Value >(src->key_, src->val_, parent);
+  newNode->left_ = clone(src->left_, newNode);
+  newNode->right_ = clone(src->right_, newNode);
+  return newNode;
+}
+
+template< class Key, class Value, class Compare >
+void afanasev::BSTree< Key, Value, Compare >::
+swap(BSTree & other) noexcept
+{
+  std::swap(root_, other.root_);
+  std::swap(size_, other.size_);
+  std::swap(comp_, other.comp_);
+}
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< Key, Value, Compare >::
+BSTree(const BSTree & other):
+  sentinel_(),
+  root_(&sentinel_),
+  size_(0),
+  comp_(other.comp_)
+{
+  if (other.root_ != &other.sentinel_)
+  {
+    root_ = clone(other.root_, &sentinel_);
+    size_ = other.size_;
+  }
+}
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< Key, Value, Compare >::
+BSTree(BSTree && other) noexcept:
+  sentinel_(),
+  root_(other.root_),
+  size_(other.size_),
+  comp_(std::move(other.comp_))
+{
+  other.root_ = &other.sentinel_;
+  other.size_ = 0;
+}
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< Key, Value, Compare > & afanasev::BSTree< Key, Value, Compare >::
+operator=(const BSTree & other)
+{
+  if (this != &other)
+  {
+    BSTree temp(other);
+    swap(temp);
+  }
+  return *this;
+}
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< Key, Value, Compare > & afanasev::BSTree< Key, Value, Compare >::
+operator=(BSTree && other) noexcept
+{
+  if (this != &other)
+  {
+    clear();
+    root_ = other.root_;
+    size_ = other.size_;
+    comp_ = std::move(other.comp_);
+    other.root_ = &other.sentinel_;
+    other.size_ = 0;
+  }
+  return *this;
+}
+
+template< class Key, class Value, class Compare >
+void afanasev::BSTree< Key, Value, Compare >::
+clearTree(NodeBiTree< Key, Value > * node) noexcept
+{
+  if (node == &sentinel_)
+  {
+    return;
+  }
+  clearTree(node->left_);
+  clearTree(node->right_);
+  delete node;
 }
 
 template< class Key, class Value, class Compare >
@@ -425,8 +496,8 @@ push(Key && k, Value && v)
 }
 
 template< class Key, class Value, class Compare >
-Value afanasev::BSTree< Key, Value, Compare >::
-get(const Key & k) const
+Value & afanasev::BSTree< Key, Value, Compare >::
+get(const Key & k)
 {
   NodeBiTree< Key, Value > * node = findNode(k);
 
@@ -438,10 +509,47 @@ get(const Key & k) const
 }
 
 template< class Key, class Value, class Compare >
+const Value & afanasev::BSTree< Key, Value, Compare >::
+get(const Key & k) const
+{
+  const NodeBiTree< Key, Value > * node = findNode(k);
+
+  if (node == &sentinel_)
+  {
+    throw std::out_of_range("Key not found");
+  }
+  return node->val_;
+}
+
+template< class Key, class Value, class Compare >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
-findNode(const Key & k) const
+findNode(const Key & k)
 {
   NodeBiTree< Key, Value > * cur = root_;
+
+  while (cur != &sentinel_)
+  {
+    if (comp_(k, cur->key_))
+    {
+      cur = cur->left_;
+    }
+    else if (comp_(cur->key_, k))
+    {
+      cur = cur->right_;
+    }
+    else
+    {
+      return cur;
+    }
+  }
+  return &sentinel_;
+}
+
+template< class Key, class Value, class Compare >
+const afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
+findNode(const Key & k) const
+{
+  const NodeBiTree< Key, Value > * cur = root_;
 
   while (cur != &sentinel_)
   {
@@ -469,11 +577,9 @@ clear() noexcept
   {
     return;
   }
-  clear(root_->left_);
-  clear(root_->right_);
-  delete root_;
-  size_ = 0;
+  clearTree(root_);
   root_ = &sentinel_;
+  size_ = 0;
 }
 
 template< class Key, class Value, class Compare >

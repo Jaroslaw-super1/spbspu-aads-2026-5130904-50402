@@ -24,7 +24,7 @@ namespace afanasev
     bool operator==(const BSTIterator & other) const;
     bool operator!=(const BSTIterator & other) const;
 
-    template< class Key, class Value, class Compare >
+    template< class K, class V, class C >
     friend class BSTree;
 
   private:
@@ -49,7 +49,7 @@ namespace afanasev
     bool operator==(const BSTConstIterator & other) const;
     bool operator!=(const BSTConstIterator & other) const;
 
-    template< class Key, class Value, class Compare >
+    template< class K, class V, class C >
     friend class BSTree;
 
   private:
