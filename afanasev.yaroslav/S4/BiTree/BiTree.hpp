@@ -129,7 +129,7 @@ template< class Key, class Value, class Compare >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
 fallLeft(NodeBiTree< Key, Value > * node) const
 {
-  while (node != &sentinel_)
+  while (node->left_ != &sentinel_)
   {
     node = node->left_;
   }
@@ -244,7 +244,7 @@ get(const Key & k) const
   {
     throw std::out_of_range("Key not found");
   }
-  return &node->val_;
+  return node->val_;
 }
 
 template< class Key, class Value, class Compare >
@@ -297,7 +297,7 @@ template< class Key, class Value, class Compare >
 afanasev::BSTree< class Key, class Value, class Compare >::
 BSTree():
   sentinel_(),
-  root_(&sentinel_)
+  root_(&sentinel_),
   size_(0),
   comp_()
 {}
