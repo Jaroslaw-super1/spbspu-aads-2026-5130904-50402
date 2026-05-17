@@ -79,7 +79,38 @@ namespace afanasev
 }
 
 template< class Key, class Value, class Compare >
-size_t afanasev::BSTree< Key, Value, Compare >::height(const_iterator it) const
+typename afanasev::BSTree< Key, Value, Compare >::const_iterator
+afanasev::BSTree< Key, Value, Compare >::
+rotateLargeLeft(const_iterator it)
+{
+  NodeBiTree< Key, Value > * node = const_cast< NodeBiTree< Key, Value > * >(it.node_);
+  if (node == &sentinel_ || node->left_ == &sentinel_ || node->left_->right_ == &sentinel_)
+  {
+    return it;
+  }
+
+  rotateRight(const_iterator(node->left_));
+  return rotateLeft(it);
+}
+
+template< class Key, class Value, class Compare >
+typename afanasev::BSTree< Key, Value, Compare >::const_iterator
+afanasev::BSTree< Key, Value, Compare >::
+rotateLargeRight(const_iterator it)
+{
+  NodeBiTree< Key, Value > * node = const_cast< NodeBiTree< Key, Value > * >(it.node_);
+  if (node == &sentinel_ || node->right_ == &sentinel_ || node->right_->left_ == &sentinel_)
+  {
+    return it;
+  }
+
+  rotateLeft(const_iterator(node->right_));
+  return rotateRight(it);
+}
+
+template< class Key, class Value, class Compare >
+size_t afanasev::BSTree< Key, Value, Compare >::
+height(const_iterator it) const
 {
   NodeBiTree< Key, Value > * node = const_cast< NodeBiTree< Key, Value > * >(it.node_);
 
@@ -95,7 +126,8 @@ size_t afanasev::BSTree< Key, Value, Compare >::height(const_iterator it) const
 }
 
 template< class Key, class Value, class Compare >
-size_t afanasev::BSTree< Key, Value, Compare >::height() const
+size_t afanasev::BSTree< Key, Value, Compare >::
+height() const
 {
   return height(const_iterator(root_));
 }
