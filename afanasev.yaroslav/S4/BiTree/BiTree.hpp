@@ -2,6 +2,7 @@
 #define BITREE_HPP
 
 #include <algorithm>
+#include <stdexcept>
 #include <utility>
 
 namespace afanasev
@@ -76,6 +77,83 @@ namespace afanasev
     NodeBiTree< Key, Value > * findNode(const Key & k) const;
     NodeBiTree< Key, Value > * fallLeft(NodeBiTree< Key, Value > * node) const;
   };
+}
+
+template< class Key, class Value, class Compare >
+typename afanasev::BSTree< Key, Value, Compare >::const_iterator
+afanasev::BSTree< Key, Value, Compare >::
+rotateLeft(const_iterator it)
+{
+  NodeBiTree< Key, Value > * x = const_cast< NodeBiTree< Key, Value > * >(it.node_);
+  if (x == &sentinel_ || x->right_ == &sentinel_)
+  {
+    return it;
+  }
+
+  NodeBiTree< Key, Value > * y = x->right_;
+  x->right_ = y->left_;
+  if (y->left_ != &sentinel_)
+  {
+    y->left_->parent_ = x;
+  }
+
+  y->parent_ = x->parent_;
+
+  if (x->parent_ == &sentinel_)
+  {
+    root_ = y;
+  }
+  else if (x == x->parent_->left_)
+  {
+    x->parent_->left_ = y;
+  }
+  else
+  {
+    x->parent_->right_ = y;
+  }
+
+  y->left_ = x;
+  x->parent_ = y;
+
+  return const_iterator(y);
+}
+
+template< class Key, class Value, class Compare >
+typename afanasev::BSTree< Key, Value, Compare >::const_iterator
+afanasev::BSTree< Key, Value, Compare >::
+rotateRight(const_iterator it)
+{
+  NodeBiTree< Key, Value > * y = const_cast< NodeBiTree< Key, Value > * >(it.node_);
+  if (y == &sentinel_ || y->left_ == &sentinel_)
+  {
+    return it;
+  }
+
+  NodeBiTree< Key, Value > * x = y->left_;
+  y->left_ = x->right_;
+  if (x->right_ != &sentinel_)
+  {
+    x->right_->parent_ = y;
+  }
+
+  x->parent_ = y->parent_;
+  if (y->parent_ == &sentinel_)
+  {
+    root_ = x;
+  }
+  else if (y == y->parent_->left_)
+  {
+    y->parent_->left_ = x;
+  }
+  else
+  {
+    y->parent_->right_ = x;
+  }
+
+  x->right_ = y;
+  y->parent_ = x;
+
+  return const_iterator(x);
 }
 
 template< class Key, class Value, class Compare >
