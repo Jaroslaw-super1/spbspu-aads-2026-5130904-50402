@@ -2,6 +2,7 @@
 #define BITREE_HPP
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include "BiTreeIter.hpp"
@@ -47,7 +48,7 @@ namespace afanasev
     {}
   };
 
-  template< class Key, class Value, class Compare >
+  template< class Key, class Value, class Compare = std::less< Key > >
   class BSTree
   {
   public:

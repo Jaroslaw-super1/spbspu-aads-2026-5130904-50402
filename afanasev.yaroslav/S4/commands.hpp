@@ -3,18 +3,17 @@
 
 #include <iostream>
 #include <string>
-#include "HashTable/HashTable.hpp"
-#include "HashTable/HashFunction.hpp"
-#include "Graph.hpp"
+#include "BiTree.hpp"
 
 namespace afanasev
 {
-  using GraphSet = HashTable< std::string, Graph, Hasher< std::string >, std::equal_to< std::string > >;
+  using Dataset = BSTree< int, std::string >;
+  using Datasets = BSTree< std::string, Dataset >;
 
-  void cmdPrint(std::istream & in, std::ostream & out, GraphSet & graphs);
-  void cmdComplement(std::istream & in, std::ostream & out, GraphSet & graphs);
-  void cmdIntersect(std::istream & in, std::ostream & out, GraphSet & graphs);
-  void cmdUnion(std::istream & in, std::ostream & out, GraphSet & graphs);
+  void cmdPrint(std::istream & in, std::ostream & out, Datasets & ds);
+  void cmdComplement(std::istream & in, std::ostream & out, Datasets & ds);
+  void cmdIntersect(std::istream & in, std::ostream & out, Datasets & ds);
+  void cmdUnion(std::istream & in, std::ostream & out, Datasets & ds);
 }
 
 #endif
