@@ -77,6 +77,104 @@ namespace afanasev
 }
 
 template< class Key, class Value, class Compare >
+void afanasev::BSTree< class Key, class Value, class Compare >::
+push(const Key & k, const Value & v)
+{
+    if (root_ == &sentinel_)
+  {
+    root_ = new NodeBiTree< Key, Value >(k, v, &sentinel_);
+    root_->left_ = root_->right_ = &sentinel_;
+    ++size_;
+    return;
+  }
+
+  NodeBiTree< Key, Value > * cur = root_;
+
+  while (true)
+  {
+    if (comp_(k, cur->key_))
+    {
+      if (cur->left_ == &sentinel_)
+      {
+        cur->left_ = new NodeBiTree< Key, Value >(k, v, cur);
+        cur->left_->left_ = cur->left_->right_ = &sentinel_;
+        ++size_;
+        return;
+      }
+
+      cur = cur->left_;
+
+    }
+    else if (comp_(cur->key_, k))
+    {
+      if (cur->right_ == &sentinel_)
+      {
+        cur->right_ = new NodeBiTree< Key, Value >(k, v, cur);
+        cur->right_->left_ = cur->right_->right_ = &sentinel_;
+        ++size_;
+        return;
+      }
+
+      cur = cur->right_;
+    }
+    else
+    {
+      cur->val_ = v;
+      return;
+    }
+  }
+}
+
+template< class Key, class Value, class Compare >
+void afanasev::BSTree< class Key, class Value, class Compare >::
+push(Key && k, Value && v)
+{
+  if (root_ == &sentinel_)
+  {
+    root_ = new NodeBiTree< Key, Value >(std::move(k), std::move(v), &sentinel_);
+    root_->left_ = root_->right_ = &sentinel_;
+    ++size_;
+    return;
+  }
+
+  NodeBiTree< Key, Value > * cur = root_;
+
+  while (true)
+  {
+    if (comp_(k, cur->key_))
+    {
+      if (cur->left_ == &sentinel_)
+      {
+        cur->left_ = new NodeBiTree< Key, Value >(std::move(k), std::move(v), cur);
+        cur->left_->left_ = cur->left_->right_ = &sentinel_;
+        ++size_;
+        return;
+      }
+
+      cur = cur->left_;
+
+    }
+    else if (comp_(cur->key_, k))
+    {
+      if (cur->right_ == &sentinel_)
+      {
+        cur->right_ = new NodeBiTree< Key, Value >(std::move(k), std::move(v), cur);
+        cur->right_->left_ = cur->right_->right_ = &sentinel_;
+        ++size_;
+        return;
+      }
+
+      cur = cur->right_;
+    }
+    else
+    {
+      cur->val_ = std::move(v);
+      return;
+    }
+  }
+}
+
+template< class Key, class Value, class Compare >
 Value afanasev::BSTree< class Key, class Value, class Compare >::
 get(const Key & k) const
 {
@@ -88,7 +186,6 @@ get(const Key & k) const
   }
   return &node->val_;
 }
-
 
 template< class Key, class Value, class Compare >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
