@@ -83,10 +83,7 @@ int main(int argc, char * argv[])
     }
   }
 
-
-
   file.close();
-
 
   using CmdFunc = void (*)(std::istream &, std::ostream &, afanasev::Datasets &);
   afanasev::BSTree< std::string, CmdFunc > commands;
@@ -95,7 +92,6 @@ int main(int argc, char * argv[])
   commands.push("complement", afanasev::cmdComplement);
   commands.push("intersect",  afanasev::cmdIntersect);
   commands.push("union",      afanasev::cmdUnion);
-
 
   std::string cmd;
   while (std::cin >> cmd)

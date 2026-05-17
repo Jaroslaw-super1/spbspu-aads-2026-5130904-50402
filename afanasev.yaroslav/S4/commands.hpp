@@ -16,4 +16,24 @@ namespace afanasev
   void cmdUnion(std::istream & in, std::ostream & out, Datasets & ds);
 }
 
+void afanasev::cmdPrint(std::istream & in, std::ostream & out, Datasets & ds)
+{
+
+}
+
+void afanasev::cmdComplement(std::istream & in, std::ostream & out, Datasets & ds)
+{
+
+}
+
+void afanasev::cmdIntersect(std::istream & in, std::ostream & out, Datasets & ds)
+{
+
+}
+
+void afanasev::cmdUnion(std::istream & in, std::ostream & out, Datasets & ds)
+{
+  
+}
+
 #endif
