@@ -8,10 +8,10 @@
 
 namespace afanasev
 {
-  template<class Key, class Value>
+  template< class Key, class Value >
   class BSTIterator;
 
-  template<class Key, class Value>
+  template< class Key, class Value >
   class BSTConstIterator;
 
   template< class Key, class Value >

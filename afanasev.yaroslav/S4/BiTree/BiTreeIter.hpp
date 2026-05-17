@@ -38,16 +38,16 @@ namespace afanasev
   class BSTConstIterator
   {
   public:
-    explicit BSTIterator(NodeBiTree< Key, Value > * node = nullptr);
+    explicit BSTConstIterator(NodeBiTree< Key, Value > * node = nullptr);
     std::pair< const Key, Value > operator*() const;
 
-    BSTIterator & operator++();
-    BSTIterator operator++(int);
-    BSTIterator & operator--();
-    BSTIterator operator--(int);
+    BSTConstIterator & operator++();
+    BSTConstIterator operator++(int);
+    BSTConstIterator & operator--();
+    BSTConstIterator operator--(int);
 
-    bool operator==(const BSTIterator & other) const;
-    bool operator!=(const BSTIterator & other) const;
+    bool operator==(const BSTConstIterator & other) const;
+    bool operator!=(const BSTConstIterator & other) const;
 
     template< class Key, class Value, class Compare >
     friend class BSTree;
@@ -188,5 +188,135 @@ afanasev::BSTIterator< Key, Value >::
 BSTIterator(NodeBiTree< Key, Value > * node):
   node_(node)
 {}
+
+
+template< class Key, class Value >
+afanasev::BSTConstIterator< Key, Value >::
+BSTConstIterator(NodeBiTree< Key, Value > * node):
+  node_(node)
+{}
+
+template< class Key, class Value >
+std::pair< const Key, Value > afanasev::BSTConstIterator< Key, Value >::
+operator*() const
+{
+  return {node_->key_, node_->val_};
+}
+
+template< class Key, class Value >
+afanasev::BSTConstIterator< Key, Value > & afanasev::BSTConstIterator< Key, Value >::
+operator++()
+{
+  if (!node_)
+  {
+    return *this;
+  }
+
+  if (node_->right_ && node_->right_ != node_)
+  {
+    node_ = goLeftMost(node_->right_);
+  }
+  else
+  {
+    NodeBiTree< Key, Value > * parent = node_->parent_;
+    while (parent && parent->right_ == node_)
+    {
+      node_ = parent;
+      parent = parent->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+afanasev::BSTConstIterator< Key, Value > afanasev::BSTConstIterator< Key, Value >::
+operator++(int)
+{
+  BSTConstIterator tmp = *this;
+  ++(*this);
+  return tmp;
+}
+
+template< class Key, class Value >
+afanasev::BSTConstIterator< Key, Value > & afanasev::BSTConstIterator< Key, Value >::
+operator--()
+{
+  if (!node_)
+  {
+    return *this;
+  }
+
+  if (node_->left_ && node_->left_ != node_)
+  {
+    node_ = goRightMost(node_->left_);
+  }
+  else
+  {
+    NodeBiTree< Key, Value > * parent = node_->parent_;
+    while (parent && parent->left_ == node_)
+    {
+      node_ = parent;
+      parent = parent->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+afanasev::BSTConstIterator< Key, Value > afanasev::BSTConstIterator< Key, Value >::
+operator--(int)
+{
+  BSTConstIterator tmp = *this;
+  --(*this);
+  return tmp;
+}
+
+template< class Key, class Value >
+bool afanasev::BSTConstIterator< Key, Value >::
+operator==(const BSTConstIterator & other) const
+{
+  return node_ == other.node_;
+}
+
+template< class Key, class Value >
+bool afanasev::BSTConstIterator< Key, Value >::
+operator!=(const BSTConstIterator & other) const
+{
+  return !(*this == other);
+}
+
+template< class Key, class Value >
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTConstIterator< Key, Value >::
+goLeftMost(NodeBiTree< Key, Value > * p)
+{
+  if (!p)
+  {
+    return nullptr;
+  }
+
+  while (p->left_ && p->left_ != p)
+  {
+    p = p->left_;
+  }
+  return p;
+}
+
+template< class Key, class Value >
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTConstIterator< Key, Value >::
+goRightMost(NodeBiTree< Key, Value > * p)
+{
+  if (!p)
+  {
+    return nullptr;
+  }
+
+  while (p->right_ && p->right_ != p)
+  {
+    p = p->right_;
+  }
+  return p;
+}
 
 #endif
