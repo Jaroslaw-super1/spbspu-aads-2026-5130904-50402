@@ -3,6 +3,16 @@
 
 namespace afanasev
 {
+  template< class Key, class Value >
+  struct NodeBiTree
+  {
+    Key key_;
+    Value val_;
+    NodeBiTree * left_, * right_;
+    NodeBiTree * parent_;
+  };
+  
+
   template< class Key, class Value, class Compare >
   class BSTree
   {
