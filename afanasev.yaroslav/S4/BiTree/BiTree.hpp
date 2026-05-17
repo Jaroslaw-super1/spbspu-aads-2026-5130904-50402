@@ -5,6 +5,9 @@
 
 namespace afanasev
 {
+  template<class Key, class Value>
+  class BSTConstIterator;
+
   template< class Key, class Value >
   struct NodeBiTree
   {
@@ -46,11 +49,12 @@ namespace afanasev
     BSTree();
 
     ~BSTree();
-    void clear(NodeBiTree< Key, Value > * node)
+    void clear(NodeBiTree< Key, Value > * node) noexcept;
 
-    void push(Key k, Value v);
-    Value get(Key k);
-    Value drop(Key k);
+    void push(Key && k, Value && v);
+    void push(const Key & k, const Value & v);
+    Value get(const Key & k) const;
+    Value drop(const Key & k);
 
     using const_iterator = BSTConstIterator< Key, Value >;
 
@@ -59,13 +63,8 @@ namespace afanasev
     const_iterator rotateLargeLeft(const_iterator it);
     const_iterator rotateLargeRight(const_iterator it);
 
-    size_t height(const_iterator it);
-    size_t height();
-
-
-
-
-
+    size_t height() const;
+    size_t height(const_iterator it) const;
 
   private:
     NodeBiTree< Key, Value > sentinel_;
@@ -77,7 +76,7 @@ namespace afanasev
 
 
 template< class Key, class Value, class Compare >
-void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree< Key, Value > * node)
+void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree< Key, Value > * node) noexcept
 {
   if (node == &sentinel_)
   {
@@ -86,17 +85,22 @@ void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree
   clear(node->left_);
   clear(node->right_);
   delete node;
+  size_--;
 }
 
 template< class Key, class Value, class Compare >
 afanasev::BSTree< class Key, class Value, class Compare >::~BSTree()
 {
-  clear();
+  clear(root_);
+  root_ = &sentinel_;
 }
 
 template< class Key, class Value, class Compare >
 afanasev::BSTree< class Key, class Value, class Compare >::BSTree():
-  root_(& sentinel_)
+  sentinel_(),
+  root_(&sentinel_)
+  size_(0),
+  comp_()
 {}
 
 
