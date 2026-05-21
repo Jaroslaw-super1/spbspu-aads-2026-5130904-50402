@@ -20,7 +20,7 @@ namespace afanasev
 
     using type = std::pair< Key, Value >;
 
-    public:
+  public:
     using HIter = HashIter< Key, Value, Hash, Equal >;
     using HCIter = HashConstIter< Key, Value, Hash, Equal >;
 
@@ -51,7 +51,7 @@ namespace afanasev
     size_t size() const noexcept;
     bool empty() const noexcept;
 
-    private:
+  private:
     Vector< List< type > > data_;
     size_t capacity_;
     size_t size_;
@@ -60,35 +60,35 @@ namespace afanasev
   };
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 typename afanasev::HashTable< Key, Value, Hash, Equal >::HIter
 afanasev::HashTable< Key, Value, Hash, Equal >::begin()
 {
   return HIter(& data_, capacity_, 0);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 typename afanasev::HashTable< Key, Value, Hash, Equal >::HIter
 afanasev::HashTable< Key, Value, Hash, Equal >::end()
 {
   return HIter();
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 typename afanasev::HashTable< Key, Value, Hash, Equal >::HCIter
 afanasev::HashTable< Key, Value, Hash, Equal >::cbegin() const
 {
   return HCIter(& data_, capacity_, 0);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 typename afanasev::HashTable< Key, Value, Hash, Equal >::HCIter
 afanasev::HashTable< Key, Value, Hash, Equal >::cend() const
 {
   return HCIter();
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -105,7 +105,7 @@ Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k)
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 const Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   size_t idx = hasher_(k) % capacity_;
@@ -122,7 +122,7 @@ const Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k) const
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable & other):
   data_(),
   capacity_(other.capacity_),
@@ -148,7 +148,7 @@ afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable & othe
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable && other) noexcept:
   data_(std::move(other.data_)),
   capacity_(other.capacity_),
@@ -161,11 +161,10 @@ afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable && other) no
   other.data_ = Vector< List < type > >();
 }
 
-template <class Key, class Value, class Hash, class Equal>
-afanasev::HashTable<Key, Value, Hash, Equal> &
-afanasev::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable & other)
+template< class Key, class Value, class Hash, class Equal > afanasev::HashTable< Key, Value, Hash, Equal >
+  & afanasev::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable & other)
 {
-  if (this != & other)
+  if (this != &other)
   {
     HashTable tmp(other);
     swap(tmp);
@@ -173,11 +172,10 @@ afanasev::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable & other)
   return *this;
 }
 
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashTable< Key, Value, Hash, Equal > &
-afanasev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable && other) noexcept
+template< class Key, class Value, class Hash, class Equal > afanasev::HashTable< Key, Value, Hash, Equal >
+  & afanasev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable && other) noexcept
 {
-  if (this != & other)
+  if (this != &other)
   {
     HashTable tmp(std::move(other));
     swap(tmp);
@@ -185,7 +183,7 @@ afanasev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable && other) no
   return *this;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::swap(HashTable & other) noexcept
 {
   data_.swap(other.data_);
@@ -195,19 +193,19 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::swap(HashTable & other) noe
   std::swap(comparator_, other.comparator_);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 size_t afanasev::HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool afanasev::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
 {
   return !size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 {
   if (slots <= capacity_)
@@ -239,7 +237,7 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   capacity_ = slots;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool afanasev::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
   size_t idx = hasher_(k) % capacity_;
@@ -255,7 +253,7 @@ bool afanasev::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
   return false;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value afanasev::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -285,7 +283,7 @@ Value afanasev::HashTable< Key, Value, Hash, Equal >::drop(Key k)
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -306,7 +304,7 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   ++size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < capacity_; ++i)
@@ -317,7 +315,7 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
   size_ = 0;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   data_(),
   capacity_(slots),
@@ -331,7 +329,7 @@ afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 afanasev::HashTable< Key, Value, Hash, Equal >::~HashTable()
 {
   clear();
