@@ -2,9 +2,6 @@
 #include <limits>
 #include <string>
 #include <stdexcept>
-#include "HashTable/HashTable.hpp"
-#include "HashTable/HashFunction.hpp"
-#include "Note.hpp"
 #include "commands.hpp"
 
 int main()

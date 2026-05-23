@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <string>
+#include <functional>
+#include "HashTable/HashTable.hpp"
+#include "HashTable/HashFunction.hpp"
+#include "Note.hpp"
 
 namespace afanasev
 {
