@@ -32,4 +32,94 @@ namespace afanasev
   void cmdDelLinkTag(std::istream & in, std::ostream & out, NoteSet & ns);
 }
 
+void afanasev::cmdCr(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdStr(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdDel(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdDelk(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdSee(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdLink(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdDeltagNote(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdSeetag(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdSeetagAnd(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdSeetagOr(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdTagRp(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdTagAddNew(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdDelTag(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdTag(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdTagDel(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdGetLiked(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdAddLinkTag(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
+void afanasev::cmdDelLinkTag(std::istream & in, std::ostream & out, NoteSet & ns)
+{
+
+}
+
 #endif

@@ -45,7 +45,7 @@ int main()
     {
       commands.get(cmd)(std::cin, std::cout, notes);
     }
-    catch (const std::exception&)
+    catch (const std::exception &)
     {
       std::cout << "<INVALID COMMAND>\n";
       std::cin.clear();
