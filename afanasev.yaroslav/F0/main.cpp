@@ -14,6 +14,7 @@ int main()
 
   using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
   using CmdHash = afanasev::Hasher< std::string >;
+
   afanasev::HashTable< std::string, CmdFunc, CmdHash, std::equal_to< std::string > > commands(16);
 
   commands.add("cr",          afanasev::cmdCr);
