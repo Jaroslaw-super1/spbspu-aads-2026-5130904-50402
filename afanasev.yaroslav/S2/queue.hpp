@@ -2,7 +2,7 @@
 #define QUEUE_HPP
 
 #include <stdexcept>
-#include "list.hpp"
+#include <list.hpp>
 
 namespace afanasev
 {

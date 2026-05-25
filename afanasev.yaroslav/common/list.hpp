@@ -6,7 +6,6 @@
 #include <string>
 #include <limits>
 
-
 namespace afanasev
 {
   template< class T > class Node;
@@ -101,14 +100,14 @@ namespace afanasev
   {
     if (!size_)
     {
-      throw std::out_of_range("list is empty");;
+      return;
     }
     Node< T > * first = fake_->next_;
-
     fake_->next_ = first->next_;
     delete first;
     --size_;
   }
+
 
   template < class T >
   void List< T >::insert(const T & val, LIter< T > pos)
@@ -273,7 +272,6 @@ namespace afanasev
     return curr_ != other.curr_;
   }
 
-
   template < class T >
   class LCIter
   {
@@ -281,6 +279,7 @@ namespace afanasev
     const Node< T > * curr_;
 
   public:
+    LCIter();
     LCIter(const Node< T > * p);
     const T & operator*() const;
     LCIter & operator++();
@@ -288,6 +287,11 @@ namespace afanasev
     bool operator==(const LCIter< T > & other) const;
     bool operator!=(const LCIter< T > & other) const;
   };
+
+  template < class T >
+  LCIter< T >::LCIter():
+    curr_(nullptr)
+  {}
 
   template < class T >
   LCIter< T >::LCIter(const Node< T > * p):
