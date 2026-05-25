@@ -46,7 +46,7 @@ int main()
     {
       std::cout << "<INVALID COMMAND>\n";
       std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }
 
