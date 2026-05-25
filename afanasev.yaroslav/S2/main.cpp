@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
   }
 
   std::ifstream file;
-  std::istream * in = & std::cin;
+  std::istream * in = &std::cin;
 
   if (argc == 2)
   {
@@ -25,19 +25,19 @@ int main(int argc, char * argv[])
       std::cerr << "error open file\n";
       return 1;
     }
-    in = & file;
+    in = &file;
   }
 
   afanasev::Stack< long long > res;
 
   try
   {
-    afanasev::Queue<afanasev::Queue<std::string>> que = afanasev::input(*in);
+    afanasev::Queue< afanasev::Queue< std::string > > que = afanasev::input(*in);
     while (!que.empty())
     {
-      afanasev::Queue<std::string> infix = que.get();
+      afanasev::Queue< std::string > infix = que.get();
       que.pop();
-      afanasev::Queue<std::string> postfix = afanasev::convert(infix);
+      afanasev::Queue< std::string > postfix = afanasev::convert(infix);
       long long v = afanasev::calcExpr(postfix);
       res.push(v);
     }

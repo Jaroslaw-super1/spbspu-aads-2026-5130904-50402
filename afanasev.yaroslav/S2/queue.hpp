@@ -3,14 +3,16 @@
 
 #include <stdexcept>
 #include <list.hpp>
+#include <utility>
 
 namespace afanasev
 {
   template< class T >
   class Queue
   {
-   public:
+  public:
     void push(const T & rhs);
+    void push(T && rhs);
     T & get();
     void pop() noexcept;
     bool empty() const noexcept;
@@ -21,7 +23,7 @@ namespace afanasev
   };
 }
 
-template < class T >
+template< class T >
 void afanasev::Queue< T >::push(const T & rhs)
 {
   if (!data_.size())
@@ -42,7 +44,28 @@ void afanasev::Queue< T >::push(const T & rhs)
   }
 }
 
-template < class T >
+template< class T >
+void afanasev::Queue< T >::push(T && rhs)
+{
+  if (!data_.size())
+  {
+    data_.pushFront(std::move(rhs));
+  }
+  else
+  {
+    LIter< T > last = data_.begin();
+    LIter< T > next = last;
+    ++next;
+    while (next != LIter< T >())
+    {
+      last = next;
+      ++next;
+    }
+    data_.insert(std::move(rhs), last);
+  }
+}
+
+template< class T >
 T & afanasev::Queue< T >::get()
 {
   if (empty())
@@ -52,19 +75,19 @@ T & afanasev::Queue< T >::get()
   return *data_.begin();
 }
 
-template < class T >
+template< class T >
 void afanasev::Queue< T >::pop() noexcept
 {
   data_.popFront();
 }
 
-template < class T >
+template< class T >
 bool afanasev::Queue< T >::empty() const noexcept
 {
   return !data_.size();
 }
 
-template < class T >
+template< class T >
 size_t afanasev::Queue< T >::size() const noexcept
 {
   return data_.size();

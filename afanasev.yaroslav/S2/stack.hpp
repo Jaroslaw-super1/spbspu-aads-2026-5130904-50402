@@ -20,13 +20,13 @@ namespace afanasev
   };
 }
 
-template < class T >
+template< class T >
 void afanasev::Stack< T >::push(const T & rhs)
 {
   data_.pushFront(rhs);
 }
 
-template < class T >
+template< class T >
 T & afanasev::Stack< T >::get()
 {
   if (empty())
@@ -36,19 +36,19 @@ T & afanasev::Stack< T >::get()
   return *data_.begin();
 }
 
-template < class T >
+template< class T >
 void afanasev::Stack< T >::pop() noexcept
 {
   data_.popFront();
 }
 
-template < class T >
+template< class T >
 bool afanasev::Stack< T >::empty() const noexcept
 {
   return !data_.size();
 }
 
-template < class T >
+template< class T >
 size_t afanasev::Stack< T >::size() const noexcept
 {
   return data_.size();
