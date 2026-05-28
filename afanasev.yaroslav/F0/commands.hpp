@@ -53,7 +53,16 @@ void afanasev::cmdCr(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdStr(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title, line;
+  in >> std::quoted(title) >> std::quoted(line);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  ns.get(title).addLine(line);
+  out << "added line to \"" << title << "\"\n";
 }
 
 void afanasev::cmdDel(std::istream & in, std::ostream & out, NoteSet & ns)
