@@ -125,7 +125,31 @@ void afanasev::cmdDelk(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdSee(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  in >> std::quoted(title);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  const Note & note = ns.get(title);
+
+  out << "name: \"" << title << "\"\n";
+  out << "tags:";
+
+  Vector< std::string > tags = note.getTags();
+  for (size_t i = 0; i < tags.getSize(); ++i)
+  {
+    out << " " << tags[i];
+  }
+  out << "\n";
+
+  const Vector< std::string > & lines = note.getLines();
+  for (size_t i = 0; i < lines.getSize(); ++i)
+  {
+    out << (i + 1) << ": " << lines[i] << "\n";
+  }
 }
 
 void afanasev::cmdLink(std::istream & in, std::ostream & out, NoteSet & ns)
