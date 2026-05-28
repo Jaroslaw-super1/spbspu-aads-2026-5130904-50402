@@ -67,7 +67,16 @@ void afanasev::cmdStr(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdDel(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  in >> std::quoted(title);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  ns.drop(title);
+  out << "\"" << title << "\" deleted\n";
 }
 
 void afanasev::cmdDelk(std::istream & in, std::ostream & out, NoteSet & ns)
