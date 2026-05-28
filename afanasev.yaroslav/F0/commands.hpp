@@ -2,6 +2,7 @@
 #define COMMANDS_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <functional>
 #include "HashTable/HashTable.hpp"
@@ -38,7 +39,16 @@ namespace afanasev
 
 void afanasev::cmdCr(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  in >> std::quoted(title);
 
+  if (ns.has(title))
+  {
+    throw std::runtime_error("Note exists");
+  }
+
+  ns.add(title, Note());
+  out << "created \"" << title << "\"\n";
 }
 
 void afanasev::cmdStr(std::istream & in, std::ostream & out, NoteSet & ns)
