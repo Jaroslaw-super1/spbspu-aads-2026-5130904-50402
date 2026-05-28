@@ -12,6 +12,7 @@ namespace afanasev
   {
   public:
     void addLine(const std::string & line);
+    const List< std::string > & getChildren() const;
 
   private:
     Vector< std::string > lines_;
@@ -20,7 +21,14 @@ namespace afanasev
   };
 }
 
-void afanasev::Note::addLine(const std::string & line)
+const afanasev::List< std::string > & afanasev::Note::
+getChildren() const
+{
+  return children_;
+}
+
+void afanasev::Note::
+addLine(const std::string & line)
 {
   lines_.pushBack(line);
 }

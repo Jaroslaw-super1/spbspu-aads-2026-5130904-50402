@@ -17,6 +17,8 @@ namespace afanasev
 //  using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
 //  using CmdHash = afanasev::Hasher< std::string >;
 
+  void deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth);
+
   void cmdCr(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdStr(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdDel(std::istream & in, std::ostream & out, NoteSet & ns);
@@ -36,6 +38,32 @@ namespace afanasev
   void cmdAddLinkTag(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdDelLinkTag(std::istream & in, std::ostream & out, NoteSet & ns);
 }
+
+void afanasev::deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth)
+{
+  if (!ns.has(title))
+  {
+    return;
+  }
+
+  LCIter< std::string > end = LCIter< std::string >();
+
+  const Note & note = ns.get(title);
+
+  depth = (!depth) ? 0 : depth - 1;
+
+  for (LCIter< std::string > it = note.getChildren().begin(); it != end; ++it)
+  {
+    deleteDepth(*it, ns, depth);
+  }
+
+
+  if (!depth)
+  {
+    ns.drop(title);
+  }
+}
+
 
 void afanasev::cmdCr(std::istream & in, std::ostream & out, NoteSet & ns)
 {
@@ -81,7 +109,18 @@ void afanasev::cmdDel(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdDelk(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  unsigned int depth = 0;
 
+  in >> std::quoted(title) >> depth;
+
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  deleteDepth(title, ns, depth);
+  out << "\"" << title << "\" subtree up to depth " << depth << " deleted\n";
 }
 
 void afanasev::cmdSee(std::istream & in, std::ostream & out, NoteSet & ns)
