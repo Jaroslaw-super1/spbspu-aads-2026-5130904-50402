@@ -18,12 +18,19 @@ namespace afanasev
     const List< std::string > & getChildren() const;
     const Vector< std::string > & getLines() const;
     Vector< std::string > getTags() const;
+    void addChild(const std::string & child);
 
   private:
     Vector< std::string > lines_;
     HashTable< std::string, bool, Hasher< std::string >, std::equal_to< std::string > > tags_{16};
     List< std::string > children_;
   };
+}
+
+void afanasev::Note::
+addChild(const std::string & child)
+{
+  children_.pushFront(child);
 }
 
 afanasev::Vector< std::string > afanasev::Note::

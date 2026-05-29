@@ -153,7 +153,20 @@ void afanasev::cmdSee(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdLink(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string parentTitle, childTitle;
+  in >> std::quoted(parentTitle) >> std::quoted(childTitle);
 
+  if (!ns.has(parentTitle))
+  {
+    throw std::runtime_error("Parent note not found");
+  }
+  if (!ns.has(childTitle))
+  {
+    throw std::runtime_error("Child note not found");
+  }
+
+  ns.get(parentTitle).addChild(childTitle);
+  out << "\"" << parentTitle << "\" linked \"" << childTitle << "\"\n";
 }
 
 void afanasev::cmdDeltagNote(std::istream & in, std::ostream & out, NoteSet & ns)
