@@ -46,21 +46,20 @@ void afanasev::deleteDepth(const std::string & title, NoteSet & ns, unsigned int
     return;
   }
 
-  LCIter< std::string > end = LCIter< std::string >();
-
   const Note & note = ns.get(title);
-
-  depth = (!depth) ? 0 : depth - 1;
-
-  for (LCIter< std::string > it = note.getChildren().begin(); it != end; ++it)
-  {
-    deleteDepth(*it, ns, depth);
-  }
-
+  LIter< std::string > end = LIter< std::string >();
+  List< std::string > childrenCopy = note.getChildren();
 
   if (!depth)
   {
     ns.drop(title);
+  }
+
+  depth = (!depth) ? 0 : depth - 1;
+
+  for (LIter< std::string > it = childrenCopy.begin(); it != end; ++it)
+  {
+    deleteDepth(*it, ns, depth);
   }
 }
 

@@ -19,7 +19,9 @@ int main()
   commands.add("del",         afanasev::cmdDel);
   commands.add("delk",        afanasev::cmdDelk);
   commands.add("see",         afanasev::cmdSee);
+
   commands.add("link",        afanasev::cmdLink);
+
   commands.add("deltagnote",  afanasev::cmdDeltagNote);
   commands.add("seetag",      afanasev::cmdSeetag);
   commands.add("seetagand",   afanasev::cmdSeetagAnd);
