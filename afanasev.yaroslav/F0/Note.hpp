@@ -19,12 +19,26 @@ namespace afanasev
     const Vector< std::string > & getLines() const;
     Vector< std::string > getTags() const;
     void addChild(const std::string & child);
+    void addTag(const std::string & tag);
+    bool hasTag(const std::string & tag) const;
 
   private:
     Vector< std::string > lines_;
     HashTable< std::string, bool, Hasher< std::string >, std::equal_to< std::string > > tags_{16};
     List< std::string > children_;
   };
+}
+
+bool afanasev::Note::
+hasTag(const std::string & tag) const
+{
+  return tags_.has(tag);
+}
+
+void afanasev::Note::
+addTag(const std::string & tag)
+{
+  tags_.add(tag, true);
 }
 
 void afanasev::Note::

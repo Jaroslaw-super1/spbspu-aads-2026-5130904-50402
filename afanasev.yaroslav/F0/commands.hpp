@@ -206,7 +206,16 @@ void afanasev::cmdDelTag(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdTag(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title, tag;
+  in >> std::quoted(title) >> std::quoted(tag);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  ns.get(title).addTag(tag);
+  out << "tag added to \"" << title << "\"\n";
 }
 
 void afanasev::cmdTagDel(std::istream & in, std::ostream & out, NoteSet & ns)
