@@ -220,7 +220,16 @@ void afanasev::cmdTag(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdTagDel(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title, tag;
+  in >> std::quoted(title) >> std::quoted(tag);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  ns.get(title).removeTag(tag);
+  out << "tag removed from \"" << title << "\"\n";
 }
 
 void afanasev::cmdGetLiked(std::istream & in, std::ostream & out, NoteSet & ns)

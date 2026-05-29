@@ -21,12 +21,19 @@ namespace afanasev
     void addChild(const std::string & child);
     void addTag(const std::string & tag);
     bool hasTag(const std::string & tag) const;
+    void removeTag(const std::string & tag);
 
   private:
     Vector< std::string > lines_;
     HashTable< std::string, bool, Hasher< std::string >, std::equal_to< std::string > > tags_{16};
     List< std::string > children_;
   };
+}
+
+void afanasev::Note::
+removeTag(const std::string & tag)
+{
+  tags_.drop(tag);
 }
 
 bool afanasev::Note::
