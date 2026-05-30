@@ -176,7 +176,18 @@ void afanasev::cmdDeltagNote(std::istream & in, std::ostream & out, NoteSet & ns
 
 void afanasev::cmdSeetag(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string tag;
+  in >> std::quoted(tag);
 
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    const std::string & title = (*it).first;
+    const Note & note = (*it).second;
+    if (note.hasTag(tag))
+    {
+      out << "\"" << title << "\"\n";
+    }
+  }
 }
 
 void afanasev::cmdSeetagAnd(std::istream & in, std::ostream & out, NoteSet & ns)
