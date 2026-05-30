@@ -171,7 +171,32 @@ void afanasev::cmdLink(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdDeltagNote(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string tag;
+  in >> std::quoted(tag);
 
+  Vector< std::string > toDelete;
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    const std::string & title = (*it).first;
+    const Note & note = (*it).second;
+    if (note.hasTag(tag))
+    {
+      toDelete.pushBack(title);
+    }
+  }
+
+  size_t deletedCount = 0;
+  for (size_t i = 0; i < toDelete.getSize(); ++i)
+  {
+    const std::string & title = toDelete[i];
+    if (ns.has(title))
+    {
+      ns.drop(title);
+      ++deletedCount;
+    }
+  }
+
+  out << "\"" << tag << "\" deleted " << deletedCount << " notes\n";
 }
 
 void afanasev::cmdSeetag(std::istream & in, std::ostream & out, NoteSet & ns)
@@ -288,7 +313,7 @@ void afanasev::cmdTag(std::istream & in, std::ostream & out, NoteSet & ns)
   }
 
   ns.get(title).addTag(tag);
-  out << "tag added to \"" << title << "\"\n";
+  out << "tag: " << tag << " added to \"" << title << "\"\n";
 }
 
 void afanasev::cmdTagDel(std::istream & in, std::ostream & out, NoteSet & ns)
