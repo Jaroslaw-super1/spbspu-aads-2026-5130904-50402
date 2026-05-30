@@ -192,7 +192,35 @@ void afanasev::cmdSeetag(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdSeetagAnd(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  unsigned int count = 0;
+  in >> count;
 
+  Vector< std::string > tags;
+  for (unsigned int i = 0; i < count; ++i)
+  {
+    std::string tag;
+    in >> std::quoted(tag);
+    tags.pushBack(tag);
+  }
+
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    const std::string & title = (*it).first;
+    const Note & note = (*it).second;
+    bool hasAll = true;
+    for (size_t i = 0; i < tags.getSize(); ++i)
+    {
+      if (!note.hasTag(tags[i]))
+      {
+        hasAll = false;
+        break;
+      }
+    }
+    if (hasAll)
+    {
+      out << "\"" << title << "\"\n";
+    }
+  }
 }
 
 void afanasev::cmdSeetagOr(std::istream & in, std::ostream & out, NoteSet & ns)
