@@ -195,6 +195,11 @@ void afanasev::cmdSeetagAnd(std::istream & in, std::ostream & out, NoteSet & ns)
   unsigned int count = 0;
   in >> count;
 
+  if (!count)
+  {
+    return;
+  }
+
   Vector< std::string > tags;
   for (unsigned int i = 0; i < count; ++i)
   {
@@ -225,7 +230,36 @@ void afanasev::cmdSeetagAnd(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdSeetagOr(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  unsigned int count = 0;
+  in >> count;
 
+  if (!count)
+  {
+    return;
+  }
+
+  Vector< std::string > tags;
+  for (unsigned int i = 0; i < count; ++i)
+  {
+    std::string tag;
+    in >> std::quoted(tag);
+    tags.pushBack(tag);
+  }
+
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    const std::string & title = (*it).first;
+    const Note & note = (*it).second;
+
+    for (size_t i = 0; i < tags.getSize(); ++i)
+    {
+      if (note.hasTag(tags[i]))
+      {
+        out << "\"" << title << "\"\n";
+        break;
+      }
+    }
+  }
 }
 
 void afanasev::cmdTagRp(std::istream & in, std::ostream & out, NoteSet & ns)
