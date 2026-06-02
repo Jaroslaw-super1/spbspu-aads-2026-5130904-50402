@@ -19,9 +19,7 @@ int main()
   commands.add("del",         afanasev::cmdDel);
   commands.add("delk",        afanasev::cmdDelk);
   commands.add("see",         afanasev::cmdSee);
-
   commands.add("link",        afanasev::cmdLink);
-
   commands.add("deltagnote",  afanasev::cmdDeltagNote);
   commands.add("seetag",      afanasev::cmdSeetag);
   commands.add("seetagand",   afanasev::cmdSeetagAnd);
@@ -31,7 +29,7 @@ int main()
   commands.add("deltag",      afanasev::cmdDelTag);
   commands.add("tag",         afanasev::cmdTag);
   commands.add("tagdel",      afanasev::cmdTagDel);
-  commands.add("getliked",    afanasev::cmdGetLiked);
+  commands.add("getlinked",    afanasev::cmdGetLiked);
   commands.add("addlinktag",  afanasev::cmdAddLinkTag);
   commands.add("dellinktag",  afanasev::cmdDelLinkTag);
 

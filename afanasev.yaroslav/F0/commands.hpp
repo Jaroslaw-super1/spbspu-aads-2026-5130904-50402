@@ -18,6 +18,8 @@ namespace afanasev
 //  using CmdHash = afanasev::Hasher< std::string >;
 
   void deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth);
+  void collectAtDepth(const std::string & title, const NoteSet & ns,
+    Vector< std::string > & result, unsigned int targetDepth, unsigned int currentDepth);
 
   void cmdCr(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdStr(std::istream & in, std::ostream & out, NoteSet & ns);
@@ -37,6 +39,28 @@ namespace afanasev
   void cmdGetLiked(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdAddLinkTag(std::istream & in, std::ostream & out, NoteSet & ns);
   void cmdDelLinkTag(std::istream & in, std::ostream & out, NoteSet & ns);
+}
+
+void afanasev::collectAtDepth(const std::string & title, const afanasev::NoteSet & ns,
+  afanasev::Vector< std::string > & result, unsigned int targetDepth, unsigned int currentDepth)
+{
+  if (!ns.has(title))
+  {
+    return;
+  }
+
+  if (currentDepth == targetDepth)
+  {
+    result.pushBack(title);
+    return;
+  }
+  const afanasev::Note & note = ns.get(title);
+  for (afanasev::LCIter< std::string > it = note.getChildren().begin();
+    it != afanasev::LCIter< std::string >();
+    ++it)
+  {
+    collectAtDepth(*it, ns, result, targetDepth, currentDepth + 1);
+  }
 }
 
 void afanasev::deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth)
@@ -375,7 +399,35 @@ void afanasev::cmdTagDel(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdGetLiked(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  unsigned int depth = 0;
+  in >> std::quoted(title) >> depth;
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  afanasev::Vector< std::string > result;
+
+  if (depth == 0)
+  {
+    out << "\"" << title << "\"\n";
+    return;
+  }
+
+  collectAtDepth(title, ns, result, depth, 0);
+
+  if (!result.getSize())
+  {
+    out << "\"There are no notes with this depth\"\n";
+    return;
+  }
+
+  for (size_t i = 0; i < result.getSize(); ++i)
+  {
+    out << "\"" << result[i] << "\"\n";
+  }
 }
 
 void afanasev::cmdAddLinkTag(std::istream & in, std::ostream & out, NoteSet & ns)
