@@ -310,7 +310,22 @@ void afanasev::cmdTagRp(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdTagAddNew(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string existingTag, newTag;
+  in >> std::quoted(existingTag) >> std::quoted(newTag);
 
+  size_t affectedCount = 0;
+
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    Note & note = ns.get((*it).first);
+    if (note.hasTag(existingTag))
+    {
+      note.addTag(newTag);
+      ++affectedCount;
+    }
+  }
+
+  out << "added \"" << newTag << "\" to notes with \"" << existingTag << "\" (" << affectedCount << " notes)\n";
 }
 
 void afanasev::cmdDelTag(std::istream & in, std::ostream & out, NoteSet & ns)
