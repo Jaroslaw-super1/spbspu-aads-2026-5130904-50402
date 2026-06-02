@@ -330,7 +330,19 @@ void afanasev::cmdTagAddNew(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdDelTag(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string tag;
+  in >> std::quoted(tag);
 
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    Note & note = ns.get((*it).first);
+    if (note.hasTag(tag))
+    {
+      note.removeTag(tag);
+    }
+  }
+
+  out << "\"" << tag << "\" deleted\n";
 }
 
 void afanasev::cmdTag(std::istream & in, std::ostream & out, NoteSet & ns)
