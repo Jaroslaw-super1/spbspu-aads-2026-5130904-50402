@@ -289,7 +289,23 @@ void afanasev::cmdSeetagOr(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdTagRp(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string oldTag, newTag;
+  in >> std::quoted(oldTag) >> std::quoted(newTag);
 
+  size_t replacedCount = 0;
+
+  for (NoteSet::HCIter it = ns.cbegin(); it != ns.cend(); ++it)
+  {
+    Note & note = ns.get((*it).first);
+    if (note.hasTag(oldTag))
+    {
+      note.removeTag(oldTag);
+      note.addTag(newTag);
+      ++replacedCount;
+    }
+  }
+
+  out << "\"" << oldTag << "\" replaced to \"" << newTag << "\" in " << replacedCount << " notes\n";
 }
 
 void afanasev::cmdTagAddNew(std::istream & in, std::ostream & out, NoteSet & ns)
