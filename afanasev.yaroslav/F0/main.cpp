@@ -6,13 +6,8 @@
 
 int main()
 {
-  using NoteSet = afanasev::HashTable<
-    std::string, afanasev::Note, afanasev::Hasher< std::string >, std::equal_to< std::string > >;
-
-  using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
-  using CmdHash = afanasev::Hasher< std::string >;
-
-  afanasev::HashTable< std::string, CmdFunc, CmdHash, std::equal_to< std::string > > commands(16);
+  afanasev::HashTable< std::string, afanasev::CmdFunc,
+    afanasev::CmdHash, std::equal_to< std::string > > commands(16);
 
   commands.add("cr",          afanasev::cmdCr);
   commands.add("str",         afanasev::cmdStr);
@@ -29,11 +24,11 @@ int main()
   commands.add("deltag",      afanasev::cmdDelTag);
   commands.add("tag",         afanasev::cmdTag);
   commands.add("tagdel",      afanasev::cmdTagDel);
-  commands.add("getlinked",    afanasev::cmdGetLiked);
+  commands.add("getlinked",   afanasev::cmdGetLiked);
   commands.add("addlinktag",  afanasev::cmdAddLinkTag);
   commands.add("dellinktag",  afanasev::cmdDelLinkTag);
 
-  NoteSet notes(64);
+  afanasev::NoteSet notes(64);
 
   std::string cmd;
   while (std::cin >> cmd)

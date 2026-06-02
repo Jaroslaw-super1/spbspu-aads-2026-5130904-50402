@@ -14,8 +14,11 @@ namespace afanasev
   using NoteSet = afanasev::HashTable<
     std::string, afanasev::Note, afanasev::Hasher< std::string >, std::equal_to< std::string > >;
 
-//  using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
-//  using CmdHash = afanasev::Hasher< std::string >;
+  using NoteSet = afanasev::HashTable< std::string, afanasev::Note, afanasev::Hasher< std::string >,
+    std::equal_to< std::string > >;
+
+  using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
+  using CmdHash = afanasev::Hasher< std::string >;
 
   void deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth);
   void collectAtDepth(const std::string & title, const NoteSet & ns,
