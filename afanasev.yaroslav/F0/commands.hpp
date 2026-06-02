@@ -432,12 +432,60 @@ void afanasev::cmdGetLiked(std::istream & in, std::ostream & out, NoteSet & ns)
 
 void afanasev::cmdAddLinkTag(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  unsigned int depth = 0;
+  std::string tag;
+  in >> std::quoted(title) >> depth >> std::quoted(tag);
 
+  if (!ns.has(title))
+  {
+    throw std::runtime_error("Note not found");
+  }
+
+  Vector< std::string > targets;
+  if (depth == 0)
+  {
+    targets.pushBack(title);
+  }
+  else
+  {
+    collectAtDepth(title, ns, targets, depth, 0);
+  }
+
+  for (size_t i = 0; i < targets.getSize(); ++i)
+  {
+    ns.get(targets[i]).addTag(tag);
+  }
+
+  out << "added tag \"" << tag << "\" to " << targets.getSize() << " note(s) at depth " << depth << " from \"" << title << "\"\n";
 }
 
 void afanasev::cmdDelLinkTag(std::istream & in, std::ostream & out, NoteSet & ns)
 {
+  std::string title;
+  unsigned int depth = 0;
+  std::string tag;
+  in >> std::quoted(title) >> depth >> std::quoted(tag);
 
+  if (!ns.has(title))
+    throw std::runtime_error("Note not found");
+
+  Vector< std::string > targets;
+  if (depth == 0)
+  {
+    targets.pushBack(title);
+  }
+  else
+  {
+    collectAtDepth(title, ns, targets, depth, 0);
+  }
+
+  for (size_t i = 0; i < targets.getSize(); ++i)
+  {
+    ns.get(targets[i]).removeTag(tag);
+  }
+
+  out << "removed tag \"" << tag << "\" from " << targets.getSize() << " note(s) at depth " << depth << " from \"" << title << "\"\n";
 }
 
 #endif
