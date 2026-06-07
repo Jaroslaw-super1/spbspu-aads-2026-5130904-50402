@@ -217,5 +217,22 @@ drop(const Key & k)
   throw std::out_of_range("CuckooHashTable::drop: key not found");
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+has(const Key & k) const noexcept
+{
+  size_t i1 = index1(k);
+  if (isOccupied1(i1) && equal_(data1_[i1].first, k))
+  {
+    return true;
+  }
+
+  size_t i2 = index2(k);
+  if (isOccupied2(i2) && equal_(data2_[i2].first, k))
+  {
+    return true;
+  }
+  return false;
+}
 
 #endif
