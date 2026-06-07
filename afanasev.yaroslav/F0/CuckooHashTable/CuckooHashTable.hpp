@@ -1,5 +1,5 @@
-#ifndef HASH_TABLE_HPP
-#define HASH_TABLE_HPP
+#ifndef CUCKOO_HASH_TABLE_HPP
+#define CUCKOO_HASH_TABLE_HPP
 
 #include <cstddef>
 #include <functional>
@@ -7,8 +7,8 @@
 #include <utility>
 #include <list.hpp>
 #include <top-it-vector.hpp>
-#include "HashFunction.hpp"
-#include "HashIter.hpp"
+#include "CuckooHashFunction.hpp"
+#include "CuckooHashIter.hpp"
 
 namespace afanasev
 {

@@ -1,5 +1,5 @@
-#ifndef HASH_ITERS_HPP
-#define HASH_ITERS_HPP
+#ifndef CUCKOO_HASH_ITERS_HPP
+#define CUCKOO_HASH_ITERS_HPP
 
 #include <top-it-vector.hpp>
 #include <list.hpp>
