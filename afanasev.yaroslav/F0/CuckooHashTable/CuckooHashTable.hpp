@@ -282,7 +282,31 @@ template< class Key, class Value, class Hash1, class Hash2, class Equal >
 bool afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
 empty() const noexcept
 {
-  return size_ == 0;
+  return !size_;
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+rehash(size_t new_capacity)
+{
+  if (new_capacity <= capacity_)
+  {
+    return;
+  }
+
+  CuckooHashTable new_table(new_capacity);
+
+  // Переносим все существующие элементы
+  for (size_t i = 0; i < capacity_; ++i) {
+    if (isOccupied1(i)) {
+      new_table.add(std::move(data1_[i].first), std::move(data1_[i].second));
+    }
+    if (isOccupied2(i)) {
+      new_table.add(std::move(data2_[i].first), std::move(data2_[i].second));
+    }
+  }
+
+  swap(new_table);
 }
 
 #endif
