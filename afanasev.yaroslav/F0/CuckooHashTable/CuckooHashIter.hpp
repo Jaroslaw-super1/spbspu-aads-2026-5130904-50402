@@ -57,13 +57,15 @@ namespace afanasev
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
 CuckooHashIter():
-  table_(nullptr), currentPos_(0)
+  table_(nullptr),
+  currentPos_(0)
 {}
 
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
 CuckooHashIter(CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table, size_t startPos):
-  table_(table), currentPos_(startPos)
+  table_(table),
+  currentPos_(startPos)
 {
   findValid();
 }
@@ -137,7 +139,108 @@ operator!=(const CuckooHashIter & other) const
 
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 typename afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::type &
-afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::operator*() const
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+operator*() const
+{
+  size_t slot = currentPos_;
+  if (slot < table_->capacity_)
+  {
+    return table_->data1_[slot];
+  }
+  else
+  {
+    return table_->data2_[slot - table_->capacity_];
+  }
+}
+
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashConstIter():
+  table_(nullptr),
+  currentPos_(0)
+{}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashConstIter(const CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table, size_t startPos):
+  table_(table),
+  currentPos_(startPos)
+{
+  findValid();
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+findValid()
+{
+  if (!table_)
+  {
+    return;
+  }
+
+  size_t total = 2 * table_->capacity_;
+  while (currentPos_ < total)
+  {
+    size_t slot = currentPos_;
+    bool occupied = false;
+    if (slot < table_->capacity_)
+    {
+      occupied = table_->occupied1_[slot];
+    }
+    else
+    {
+      occupied = table_->occupied2_[slot - table_->capacity_];
+    }
+    if (occupied)
+    {
+      return;
+    }
+    ++currentPos_;
+  }
+
+  table_ = nullptr;
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal > &
+afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+operator++()
+{
+  if (table_)
+  {
+    ++currentPos_;
+    findValid();
+  }
+  return *this;
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+operator==(const CuckooHashConstIter & other) const
+{
+  if (!table_ && !other.table_)
+  {
+    return true;
+  }
+  if (!table_ || !other.table_)
+  {
+    return false;
+  }
+  return table_ == other.table_ && currentPos_ == other.currentPos_;
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+operator!=(const CuckooHashConstIter & other) const
+{
+  return !(*this == other);
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+const typename afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::type &
+afanasev::CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >::
+operator*() const
 {
   size_t slot = currentPos_;
   if (slot < table_->capacity_)
