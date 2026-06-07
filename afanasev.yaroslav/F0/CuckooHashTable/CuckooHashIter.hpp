@@ -253,4 +253,33 @@ operator*() const
   }
 }
 
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::begin()
+{
+  return HIter(this, 0);
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::end()
+{
+  return HIter();
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HCIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::cbegin() const
+{
+  return HCIter(this, 0);
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HCIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::cend() const
+{
+  return HCIter();
+}
+
 #endif

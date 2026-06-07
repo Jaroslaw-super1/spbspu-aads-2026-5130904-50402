@@ -6,7 +6,6 @@ using namespace afanasev;
 
 BOOST_AUTO_TEST_SUITE(test_commands)
 
-// Вспомогательная функция: выполнить команду и вернуть вывод
 std::string runCmd(NoteSet& ns, const std::string& cmdLine) {
   std::istringstream in(cmdLine);
   std::ostringstream out;
@@ -56,7 +55,6 @@ BOOST_AUTO_TEST_CASE(test_del) {
   runCmd(ns, "cr \"B\"");
   runCmd(ns, "link \"A\" \"B\"");
   BOOST_CHECK_EQUAL(runCmd(ns, "del \"A\""), "\"A\" deleted\n");
-  // B остаётся, т.к. del удаляет только одну заметку
   BOOST_CHECK_NO_THROW(runCmd(ns, "see \"B\""));
 }
 
@@ -91,7 +89,6 @@ BOOST_AUTO_TEST_CASE(test_link) {
   runCmd(ns, "cr \"child\"");
   BOOST_CHECK_EQUAL(runCmd(ns, "link \"parent\" \"child\""),
     "\"parent\" linked \"child\"\n");
-  // Проверяем, что child отображается в getliked
   std::string liked = runCmd(ns, "getliked \"parent\" 1");
   BOOST_TEST(liked.find("\"child\"") != std::string::npos);
 }
