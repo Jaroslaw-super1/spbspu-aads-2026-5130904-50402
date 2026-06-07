@@ -444,4 +444,32 @@ findValue(const Key & k) const noexcept
   return nullptr;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::begin()
+{
+  return iterator(this, 0);
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::end()
+{
+  return iterator();
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HCIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::cbegin() const
+{
+  return const_iterator(this, 0);
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::HCIter
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::cend() const
+{
+  return const_iterator();
+}
+
 #endif
