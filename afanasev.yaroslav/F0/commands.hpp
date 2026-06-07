@@ -5,20 +5,19 @@
 #include <iomanip>
 #include <string>
 #include <functional>
-#include "HashTable/HashTable.hpp"
-#include "HashTable/HashFunction.hpp"
+#include "CuckooHashTable/CuckooHashTable.hpp"
+#include "CuckooHashTable/CuckooHashIter.hpp"
+#include "CuckooHashTable/CuckooHashFunction.hpp"
 #include "Note.hpp"
 
 namespace afanasev
 {
-  using NoteSet = afanasev::HashTable<
-    std::string, afanasev::Note, afanasev::Hasher< std::string >, std::equal_to< std::string > >;
+  using CmdHash = afanasev::Hasher< std::string >;
 
-  using NoteSet = afanasev::HashTable< std::string, afanasev::Note, afanasev::Hasher< std::string >,
-    std::equal_to< std::string > >;
+  using NoteSet = afanasev::CuckooHashTable< std::string, afanasev::Note, CmdHash,
+    CmdHash, std::equal_to< std::string > >;
 
   using CmdFunc = void (*)(std::istream &, std::ostream &, NoteSet &);
-  using CmdHash = afanasev::Hasher< std::string >;
 
   void deleteDepth(const std::string & title, NoteSet & ns, unsigned int depth);
   void collectAtDepth(const std::string & title, const NoteSet & ns,

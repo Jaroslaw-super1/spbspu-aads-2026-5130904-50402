@@ -1,9 +1,9 @@
 #ifndef NOTE_HPP
 #define NOTE_HPP
 
-#include <HashTable/HashTable.hpp>
-#include <HashTable/HashFunction.hpp>
-#include "HashTable/HashIter.hpp"
+#include "CuckooHashTable/CuckooHashTable.hpp"
+#include "CuckooHashTable/CuckooHashIter.hpp"
+#include "CuckooHashTable/CuckooHashFunction.hpp"
 #include <top-it-vector.hpp>
 #include <list.hpp>
 
@@ -12,7 +12,8 @@ namespace afanasev
   class Note
   {
   public:
-    using TagSet = HashTable< std::string, bool, Hasher< std::string >, std::equal_to< std::string > >;
+    using TagSet = CuckooHashTable< std::string, bool, Hasher< std::string >,
+      Hasher< std::string >, std::equal_to< std::string > >;
 
     void addLine(const std::string & line);
     const List< std::string > & getChildren() const;
@@ -25,7 +26,7 @@ namespace afanasev
 
   private:
     Vector< std::string > lines_;
-    HashTable< std::string, bool, Hasher< std::string >, std::equal_to< std::string > > tags_{16};
+    TagSet tags_{16};
     List< std::string > children_;
   };
 }
