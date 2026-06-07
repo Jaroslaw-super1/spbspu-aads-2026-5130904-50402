@@ -410,4 +410,23 @@ findValue(const Key & k) noexcept
   return nullptr;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+const Value * afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+findValue(const Key & k) const noexcept
+{
+  size_t i1 = index1(k);
+  if (isOccupied1(i1) && equal_(data1_[i1].first, k))
+  {
+    return &data1_[i1].second;
+  }
+
+  size_t i2 = index2(k);
+  if (isOccupied2(i2) && equal_(data2_[i2].first, k))
+  {
+    return &data2_[i2].second;
+  }
+
+  return nullptr;
+}
+
 #endif
