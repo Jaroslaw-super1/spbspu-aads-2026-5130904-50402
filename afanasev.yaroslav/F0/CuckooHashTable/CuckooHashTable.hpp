@@ -106,4 +106,21 @@ CuckooHashTable(const CuckooHashTable & other):
   equal_(other.equal_)
 {}
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashTable(CuckooHashTable && other) noexcept:
+  data1_(std::move(other.data1_)),
+  occupied1_(std::move(other.occupied1_)),
+  data2_(std::move(other.data2_)),
+  occupied2_(std::move(other.occupied2_)),
+  capacity_(other.capacity_),
+  size_(other.size_),
+  hash1_(std::move(other.hash1_)),
+  hash2_(std::move(other.hash2_)),
+  equal_(std::move(other.equal_))
+{
+  other.capacity_ = 0;
+  other.size_ = 0;
+}
+
 #endif
