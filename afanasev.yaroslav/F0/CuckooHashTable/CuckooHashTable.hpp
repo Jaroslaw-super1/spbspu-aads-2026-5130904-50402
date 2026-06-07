@@ -143,5 +143,17 @@ operator=(const CuckooHashTable & other)
   return *this;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal > &
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+operator=(CuckooHashTable && other) noexcept
+{
+  if (this != &other)
+  {
+    CuckooHashTable tmp(std::move(other));
+    swap(tmp);
+  }
+  return *this;
+}
 
 #endif
