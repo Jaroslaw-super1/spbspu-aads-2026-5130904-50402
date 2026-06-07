@@ -6,8 +6,10 @@
 
 int main()
 {
-  afanasev::HashTable< std::string, afanasev::CmdFunc,
-    afanasev::CmdHash, std::equal_to< std::string > > commands(16);
+  using CmdTable = afanasev::CuckooHashTable< std::string, afanasev::CmdFunc,
+    afanasev::CmdHash, afanasev::CmdHash, std::equal_to< std::string > >;
+
+  CmdTable commands(16);
 
   commands.add("cr",          afanasev::cmdCr);
   commands.add("str",         afanasev::cmdStr);
