@@ -100,4 +100,19 @@ findValid()
   table_ = nullptr;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal > &
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+operator++()
+{
+  if (table_)
+  {
+    ++currentPos_;
+    findValid();
+  }
+  return *this;
+}
+
+
+
 #endif
