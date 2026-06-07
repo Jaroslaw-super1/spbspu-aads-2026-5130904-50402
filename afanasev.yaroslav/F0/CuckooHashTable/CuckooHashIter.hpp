@@ -1,221 +1,58 @@
 #ifndef CUCKOO_HASH_ITERS_HPP
 #define CUCKOO_HASH_ITERS_HPP
 
-#include <top-it-vector.hpp>
-#include <list.hpp>
 #include <utility>
+#include "CuckooHashTable.hpp"
 
 namespace afanasev
 {
-  template < class Key, class Value, class Hash, class Equal >
-  class HashTable;
-
-  template < class Key, class Value, class Hash, class Equal >
-  class HashConstIter;
-
-  template < class Key, class Value, class Hash, class Equal >
-  class HashIter
+  template < class Key, class Value, class Hash1, class Hash2, class Equal >
+  class CuckooHashIter
   {
-    friend class HashTable< Key, Value, Hash, Equal >;
-    friend class HashConstIter< Key, Value, Hash, Equal >;
+    friend class CuckooHashTable< Key, Value, Hash1, Hash2, Equal >;
+    friend class CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >;
     using type = std::pair< Key, Value >;
 
-    public:
-    HashIter();
-    HashIter(Vector< List< type > >* data, size_t capacity, size_t start_idx);
+  public:
+    CuckooHashIter();
+    explicit CuckooHashIter(CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table, size_t startPos = 0);
 
-    HashIter & operator++();
-    bool operator==(const HashIter & other) const;
-    bool operator!=(const HashIter & other) const;
+    CuckooHashIter & operator++();
+    bool operator==(const CuckooHashIter & other) const;
+    bool operator!=(const CuckooHashIter & other) const;
     type & operator*() const;
 
-    private:
-    Vector< List< type > > * data_;
-    size_t capacity_;
-    size_t idx_;
-    LIter< type > listIt_;
+  private:
+    CuckooHashTable< Key, Value, Hash1, Hash2, Equal> * table_;
+    size_t currentPos_;
 
     void findValid();
   };
 
-  template < class Key, class Value, class Hash, class Equal >
-  class HashConstIter
+  template < class Key, class Value, class Hash1, class Hash2, class Equal >
+  class CuckooHashConstIter
   {
-    friend class HashTable< Key, Value, Hash, Equal >;
-    friend class HashIter< Key, Value, Hash, Equal >;
+    friend class CuckooHashTable< Key, Value, Hash1, Hash2, Equal >;
+    friend class CuckooHashIter< Key, Value, Hash1, Hash2, Equal >;
     using type = std::pair< Key, Value >;
 
-    public:
-    HashConstIter();
-    HashConstIter(const Vector< List< type > > * data, size_t capacity, size_t start_idx);
+  public:
+    CuckooHashConstIter();
+    explicit CuckooHashConstIter(const CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table,
+      size_t startPos = 0);
 
-    HashConstIter& operator++();
-    bool operator==(const HashConstIter & other) const;
-    bool operator!=(const HashConstIter & other) const;
+    CuckooHashConstIter & operator++();
+    bool operator==(const CuckooHashConstIter & other) const;
+    bool operator!=(const CuckooHashConstIter & other) const;
     const type & operator*() const;
 
-    private:
-    const Vector< List< type > > * data_;
-    size_t capacity_;
-    size_t idx_;
-    LCIter< type > listIt_;
+  private:
+    const CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table_;
+    size_t currentPos_;
 
     void findValid();
   };
 }
 
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashIter< Key, Value, Hash, Equal >::HashIter():
-  data_(nullptr),
-  capacity_(0),
-  idx_(0),
-  listIt_()
-{}
-
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashIter< Key, Value, Hash, Equal >::HashIter(Vector< List< type > > * data,
-  size_t capacity, size_t start_idx):
-  data_(data),
-  capacity_(capacity),
-  idx_(start_idx),
-  listIt_()
-{
-  findValid();
-}
-
-template < class Key, class Value, class Hash, class Equal >
-void afanasev::HashIter< Key, Value, Hash, Equal >::findValid()
-{
-  while (idx_ < capacity_)
-  {
-    listIt_ = (*data_)[idx_].begin();
-    if (listIt_ != LIter< type >())
-    {
-      return;
-    }
-    ++idx_;
-  }
-
-  data_ = nullptr;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashIter< Key, Value, Hash, Equal > &
-afanasev::HashIter< Key, Value, Hash, Equal >::operator++()
-{
-  ++listIt_;
-  if (listIt_ != LIter< type >())
-  {
-    return *this;
-  }
-
-  ++idx_;
-  findValid();
-  return *this;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-bool afanasev::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter & other) const
-{
-  if (!data_ && !other.data_)
-  {
-    return true;
-  }
-
-  if (!data_ || !other.data_)
-  {
-    return false;
-  }
-  return idx_ == other.idx_ && listIt_ == other.listIt_;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-bool afanasev::HashIter< Key, Value, Hash, Equal >::operator!=(const HashIter & other) const
-{
-  return !(*this == other);
-}
-
-template < class Key, class Value, class Hash, class Equal >
-typename afanasev::HashIter< Key, Value, Hash, Equal >::type &
-afanasev::HashIter< Key, Value, Hash, Equal >::operator*() const
-{
-  return *listIt_;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
-  data_(nullptr),
-  capacity_(0),
-  idx_(0),
-  listIt_()
-{}
-
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(const Vector< List< type > > * data,
-  size_t capacity, size_t start_idx):
-  data_(data),
-  capacity_(capacity),
-  idx_(start_idx),
-  listIt_()
-{
-  findValid();
-}
-
-template < class Key, class Value, class Hash, class Equal >
-void afanasev::HashConstIter< Key, Value, Hash, Equal >::findValid()
-{
-  while (idx_ < capacity_)
-  {
-    listIt_ = (*data_)[idx_].begin();
-    if (listIt_ != LCIter< type >())
-    {
-      return;
-    }
-    ++idx_;
-  }
-  data_ = nullptr;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-afanasev::HashConstIter< Key, Value, Hash, Equal > &
-afanasev::HashConstIter< Key, Value, Hash, Equal >::operator++()
-{
-  ++listIt_;
-  if (listIt_ != LCIter< type >())
-  {
-    return *this;
-  }
-  ++idx_;
-  findValid();
-  return *this;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-bool afanasev::HashConstIter< Key, Value, Hash, Equal >::operator==(const HashConstIter & other) const
-{
-  if (!data_ && !other.data_)
-  {
-    return true;
-  }
-
-  if (!data_ || !other.data_)
-  {
-    return false;
-  }
-  return idx_ == other.idx_ && listIt_ == other.listIt_;
-}
-
-template < class Key, class Value, class Hash, class Equal >
-bool afanasev::HashConstIter< Key, Value, Hash, Equal >::operator!=(const HashConstIter & other) const
-{
-  return !(*this == other);
-}
-
-template < class Key, class Value, class Hash, class Equal >
-const typename afanasev::HashConstIter< Key, Value, Hash, Equal >::type &
-afanasev::HashConstIter< Key, Value, Hash, Equal >::operator*() const
-{
-  return *listIt_;
-}
 
 #endif
