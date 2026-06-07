@@ -247,4 +247,16 @@ get(const Key & k)
   return *p;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+const Value & afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+get(const Key & k) const
+{
+  const Value * p = findValue(k);
+  if (!p)
+  {
+    throw std::out_of_range("CuckooHashTable::get const: key not found");
+  }
+  return *p;
+}
+
 #endif
