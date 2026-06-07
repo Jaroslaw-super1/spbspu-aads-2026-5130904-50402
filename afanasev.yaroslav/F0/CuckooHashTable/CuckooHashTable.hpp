@@ -235,4 +235,16 @@ has(const Key & k) const noexcept
   return false;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+Value & afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+get(const Key & k)
+{
+  Value * p = findValue(k);
+  if (!p)
+  {
+    throw std::out_of_range("CuckooHashTable::get: key not found");
+  }
+  return *p;
+}
+
 #endif
