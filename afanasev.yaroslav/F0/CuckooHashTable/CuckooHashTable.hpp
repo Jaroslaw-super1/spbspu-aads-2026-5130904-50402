@@ -32,29 +32,29 @@ namespace afanasev
     HCIter cbegin() const;
     HCIter cend() const;
 
-    explicit CuckooHashTable( size_t initial_capacity = 16 );
-    CuckooHashTable( const CuckooHashTable & other );
-    CuckooHashTable( CuckooHashTable && other ) noexcept;
+    explicit CuckooHashTable(size_t initial_capacity = 16);
+    CuckooHashTable(const CuckooHashTable & other);
+    CuckooHashTable(CuckooHashTable && other) noexcept;
     ~CuckooHashTable();
 
-    CuckooHashTable & operator=( const CuckooHashTable & other );
-    CuckooHashTable & operator=( CuckooHashTable && other ) noexcept;
+    CuckooHashTable & operator=(const CuckooHashTable & other);
+    CuckooHashTable & operator=(CuckooHashTable && other) noexcept;
 
-    void add( const Key & k, const Value & v );
-    void add( Key && k, Value && v );
+    void add(const Key & k, const Value & v);
+    void add(Key && k, Value && v);
 
-    Value drop( const Key & k );
-    bool has( const Key & k ) const noexcept;
+    Value drop(const Key & k);
+    bool has(const Key & k) const noexcept;
 
-    Value & get( const Key & k );
-    const Value & get( const Key & k ) const;
+    Value & get(const Key & k);
+    const Value & get(const Key & k) const;
 
     void clear() noexcept;
     size_t size() const noexcept;
     bool empty() const noexcept;
 
-    void rehash( size_t new_capacity );
-    void swap( CuckooHashTable & other ) noexcept;
+    void rehash(size_t new_capacity);
+    void swap(CuckooHashTable & other) noexcept;
 
   private:
     Vector< value_type > data1_;
@@ -68,19 +68,18 @@ namespace afanasev
     Hash2 hash2_;
     Equal equal_;
 
-    size_t index1( const Key & k ) const { return hash1_( k ) % capacity_; }
-    size_t index2( const Key & k ) const { return hash2_( k ) % capacity_; }
+    size_t index1(const Key & k) const { return hash1_(k) % capacity_; }
+    size_t index2(const Key & k) const { return hash2_(k) % capacity_; }
 
-    bool insertInternal( const Key & k, const Value & v );
-    bool insertInternal( Key && k, Value && v );
+    bool insertInternal(value_type & current);
 
-    Value * findValue( const Key & k ) noexcept;
-    const Value * findValue( const Key & k ) const noexcept;
+    Value * findValue(const Key & k) noexcept;
+    const Value * findValue(const Key & k) const noexcept;
 
-    bool isOccupied1( size_t idx ) const { return occupied1_[ idx ] == 1; }
-    bool isOccupied2( size_t idx ) const { return occupied2_[ idx ] == 1; }
-    void setOccupied1( size_t idx, bool occ ) { occupied1_[ idx ] = occ ? 1 : 0; }
-    void setOccupied2( size_t idx, bool occ ) { occupied2_[ idx ] = occ ? 1 : 0; }
+    bool isOccupied1(size_t idx) const { return occupied1_[ idx ] == 1; }
+    bool isOccupied2(size_t idx) const { return occupied2_[ idx ] == 1; }
+    void setOccupied1(size_t idx, bool occ) { occupied1_[ idx ] = occ ? 1 : 0; }
+    void setOccupied2(size_t idx, bool occ) { occupied2_[ idx ] = occ ? 1 : 0; }
   };
 }
 
@@ -110,16 +109,31 @@ CuckooHashTable(size_t initial_capacity):
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
 CuckooHashTable(const CuckooHashTable & other):
-  data1_(other.data1_),
-  occupied1_(other.occupied1_),
-  data2_(other.data2_),
-  occupied2_(other.occupied2_),
   capacity_(other.capacity_),
-  size_(other.size_),
+  size_(0),
   hash1_(other.hash1_),
   hash2_(other.hash2_),
   equal_(other.equal_)
-{}
+{
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    data1_.pushBack(value_type());
+    occupied1_.pushBack(false);
+    data2_.pushBack(value_type());
+    occupied2_.pushBack(false);
+  }
+  for (size_t i = 0; i < other.capacity_; ++i)
+  {
+    if (other.isOccupied1(i))
+    {
+      add(other.data1_[i].first, other.data1_[i].second);
+    }
+    if (other.isOccupied2(i))
+    {
+      add(other.data2_[i].first, other.data2_[i].second);
+    }
+  }
+}
 
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
@@ -190,10 +204,10 @@ template< class Key, class Value, class Hash1, class Hash2, class Equal >
 void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
 add(const Key & k, const Value & v)
 {
-  while (!insertInternal(k, v))
+  value_type current(k, v);
+  while (!insertInternal(current))
   {
-    size_t new_cap = capacity_ * 2;
-    rehash(new_cap);
+    rehash(capacity_ * 2);
   }
 }
 
@@ -201,10 +215,10 @@ template< class Key, class Value, class Hash1, class Hash2, class Equal >
 void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
 add(Key && k, Value && v)
 {
-  while (!insertInternal(std::move(k), std::move(v)))
+  value_type current(std::move(k), std::move(v));
+  while (!insertInternal(current))
   {
-    size_t new_cap = capacity_ * 2;
-    rehash(new_cap);
+    rehash(capacity_ * 2);
   }
 }
 
@@ -280,8 +294,16 @@ clear() noexcept
 {
   for (size_t i = 0; i < capacity_; ++i)
   {
-    setOccupied1(i, false);
-    setOccupied2(i, false);
+    if (isOccupied1(i))
+    {
+      data1_[i] = value_type();
+      setOccupied1(i, false);
+    }
+    if (isOccupied2(i))
+    {
+      data2_[i] = value_type();
+      setOccupied2(i, false);
+    }
   }
   size_ = 0;
 }
@@ -328,18 +350,16 @@ rehash(size_t new_capacity)
 
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 bool afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
-insertInternal(const Key & k, const Value & v)
+insertInternal(value_type & current)
 {
-  Value * existing = findValue(k);
+  Value* existing = findValue(current.first);
   if (existing)
   {
-    *existing = v;
+    *existing = std::move(current.second);
     return true;
   }
 
-  value_type current(k, v);
   const size_t MAX_LOOP = 2 * capacity_;
-
   for (size_t step = 0; step < MAX_LOOP; ++step)
   {
     size_t i1 = hash1_(current.first) % capacity_;
@@ -362,47 +382,6 @@ insertInternal(const Key & k, const Value & v)
     }
     std::swap(current, data2_[i2]);
   }
-
-  return false;
-}
-
-template< class Key, class Value, class Hash1, class Hash2, class Equal >
-bool afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
-insertInternal(Key && k, Value && v)
-{
-  Value * existing = findValue(k);
-  if (existing)
-  {
-    *existing = std::move(v);
-    return true;
-  }
-
-  value_type current(std::move(k), std::move(v));
-  const size_t MAX_LOOP = 2 * capacity_;
-
-  for (size_t step = 0; step < MAX_LOOP; ++step)
-  {
-    size_t i1 = hash1_(current.first) % capacity_;
-    if (!isOccupied1(i1))
-    {
-      data1_[i1] = std::move(current);
-      setOccupied1(i1, true);
-      ++size_;
-      return true;
-    }
-    std::swap(current, data1_[i1]);
-
-    size_t i2 = hash2_(current.first) % capacity_;
-    if (!isOccupied2(i2))
-    {
-      data2_[i2] = std::move(current);
-      setOccupied2(i2, true);
-      ++size_;
-      return true;
-    }
-    std::swap(current, data2_[i2]);
-  }
-
   return false;
 }
 
