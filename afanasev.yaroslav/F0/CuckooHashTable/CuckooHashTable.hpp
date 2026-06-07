@@ -10,12 +10,27 @@
 
 namespace afanasev
 {
+  template< class Key, class Value, class Hash1, class Hash2, class Equal >
+  class CuckooHashIter;
+  template< class Key, class Value, class Hash1, class Hash2, class Equal >
+  class CuckooHashConstIter;
+
   template < class Key, class Value, class Hash1 = Hasher< Key >,
     class Hash2 = Hasher< Key >, class Equal = std::equal_to< Key > >
   class CuckooHashTable
   {
   public:
+    friend class CuckooHashIter< Key, Value, Hash1, Hash2, Equal >;
+    friend class CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >;
+  
     using value_type = std::pair< Key, Value >;
+    using HIter = CuckooHashIter< Key, Value, Hash1, Hash2, Equal >;
+    using HCIter = CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >;
+
+    HIter begin();
+    HIter end();
+    HCIter cbegin() const;
+    HCIter cend() const;
 
     explicit CuckooHashTable( size_t initial_capacity = 16 );
     CuckooHashTable( const CuckooHashTable & other );
@@ -25,21 +40,21 @@ namespace afanasev
     CuckooHashTable & operator=( const CuckooHashTable & other );
     CuckooHashTable & operator=( CuckooHashTable && other ) noexcept;
 
-    void add( const Key & k, const Value & v );        // вставка / обновление
-    void add( Key && k, Value && v );                  // перемещающая версия
+    void add( const Key & k, const Value & v );
+    void add( Key && k, Value && v );
 
-    Value drop( const Key & k );                       // удалить ключ, вернуть значение
-    bool has( const Key & k ) const noexcept;          // проверить наличие
+    Value drop( const Key & k );
+    bool has( const Key & k ) const noexcept;
 
-    Value & get( const Key & k );                      // доступ к значению (неконстантный)
-    const Value & get( const Key & k ) const;          // константный доступ
+    Value & get( const Key & k );
+    const Value & get( const Key & k ) const;
 
-    void clear() noexcept;                             // очистить таблицу
-    size_t size() const noexcept;                      // количество элементов
-    bool empty() const noexcept;                       // пуста ли таблица
+    void clear() noexcept;
+    size_t size() const noexcept;
+    bool empty() const noexcept;
 
-    void rehash( size_t new_capacity );                // изменить ёмкость (перестроить)
-    void swap( CuckooHashTable & other ) noexcept;     // обмен содержимым
+    void rehash( size_t new_capacity );
+    void swap( CuckooHashTable & other ) noexcept;
 
   private:
     Vector< value_type > data1_;
