@@ -22,7 +22,7 @@ namespace afanasev
   public:
     friend class CuckooHashIter< Key, Value, Hash1, Hash2, Equal >;
     friend class CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >;
-  
+
     using value_type = std::pair< Key, Value >;
     using HIter = CuckooHashIter< Key, Value, Hash1, Hash2, Equal >;
     using HCIter = CuckooHashConstIter< Key, Value, Hash1, Hash2, Equal >;
