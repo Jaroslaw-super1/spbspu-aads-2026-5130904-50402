@@ -68,4 +68,36 @@ CuckooHashIter(CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table, size_
   findValid();
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+findValid()
+{
+  if (!table_)
+  {
+    return;
+  }
+
+  size_t total = 2 * table_->capacity_;
+  while (currentPos_ < total)
+  {
+    size_t slot = currentPos_;
+    bool occupied = false;
+    if (slot < table_->capacity_)
+    {
+      occupied = table_->occupied1_[slot];
+    }
+    else
+    {
+      occupied = table_->occupied2_[slot - table_->capacity_];
+    }
+    if (occupied)
+    {
+      return;
+    }
+    ++currentPos_;
+  }
+
+  table_ = nullptr;
+}
+
 #endif
