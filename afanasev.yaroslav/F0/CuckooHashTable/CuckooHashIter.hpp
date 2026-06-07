@@ -113,6 +113,27 @@ operator++()
   return *this;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+operator==(const CuckooHashIter & other) const
+{
+  if (!table_ && !other.table_)
+  {
+    return true;
+  }
+  if (!table_ || !other.table_)
+  {
+    return false;
+  }
+  return table_ == other.table_ && currentPos_ == other.currentPos_;
+}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+operator!=(const CuckooHashIter & other) const
+{
+  return !(*this == other);
+}
 
 
 #endif
