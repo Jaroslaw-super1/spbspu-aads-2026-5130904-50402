@@ -171,4 +171,16 @@ swap(CuckooHashTable & other) noexcept
   std::swap(equal_, other.equal_);
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+add(const Key & k, const Value & v)
+{
+  while (!insertInternal(k, v))
+  {
+    size_t new_cap = capacity_ * 2;
+    rehash(new_cap);
+  }
+}
+
+
 #endif
