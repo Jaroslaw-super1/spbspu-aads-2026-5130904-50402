@@ -54,5 +54,18 @@ namespace afanasev
   };
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashIter():
+  table_(nullptr), currentPos_(0)
+{}
+
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashIter(CuckooHashTable< Key, Value, Hash1, Hash2, Equal > * table, size_t startPos):
+  table_(table), currentPos_(startPos)
+{
+  findValid();
+}
 
 #endif
