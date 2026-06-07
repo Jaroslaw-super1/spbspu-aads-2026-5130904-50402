@@ -259,4 +259,16 @@ get(const Key & k) const
   return *p;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+clear() noexcept
+{
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    setOccupied1(i, false);
+    setOccupied2(i, false);
+  }
+  size_ = 0;
+}
+
 #endif
