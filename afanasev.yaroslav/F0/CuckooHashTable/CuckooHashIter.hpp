@@ -135,5 +135,19 @@ operator!=(const CuckooHashIter & other) const
   return !(*this == other);
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+typename afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::type &
+afanasev::CuckooHashIter< Key, Value, Hash1, Hash2, Equal >::operator*() const
+{
+  size_t slot = currentPos_;
+  if (slot < table_->capacity_)
+  {
+    return table_->data1_[slot];
+  }
+  else
+  {
+    return table_->data2_[slot - table_->capacity_];
+  }
+}
 
 #endif
