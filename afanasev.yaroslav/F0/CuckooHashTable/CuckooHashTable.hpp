@@ -69,4 +69,28 @@ namespace afanasev
   };
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashTable(size_t initial_capacity)
+  : capacity_(initial_capacity),
+    size_(0),
+    hash1_(Hash1()),
+    hash2_(Hash2()),
+    equal_(Equal())
+{
+  if (!capacity_)
+  {
+    capacity_ = 1;
+  }
+
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    data1_.pushBack(value_type());
+    occupied1_.pushBack(false);
+    data2_.pushBack(value_type());
+    occupied2_.pushBack(false);
+  }
+}
+
+
 #endif
