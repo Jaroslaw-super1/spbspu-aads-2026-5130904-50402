@@ -193,4 +193,29 @@ add(Key && k, Value && v)
   }
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+Value afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+drop(const Key & k)
+{
+  size_t i1 = index1(k);
+  if (isOccupied1(i1) && equal_(data1_[i1].first, k))
+  {
+    Value val = std::move(data1_[i1].second);
+    setOccupied1(i1, false);
+    --size_;
+    return val;
+  }
+
+  size_t i2 = index2(k);
+  if (isOccupied2(i2) && equal_(data2_[i2].first, k))
+  {
+    Value val = std::move(data2_[i2].second);
+    setOccupied2(i2, false);
+    --size_;
+    return val;
+  }
+  throw std::out_of_range("CuckooHashTable::drop: key not found");
+}
+
+
 #endif
