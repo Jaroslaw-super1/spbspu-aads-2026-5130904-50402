@@ -156,4 +156,19 @@ operator=(CuckooHashTable && other) noexcept
   return *this;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+void afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+swap(CuckooHashTable & other) noexcept
+{
+  data1_.swap(other.data1_);
+  occupied1_.swap(other.occupied1_);
+  data2_.swap(other.data2_);
+  occupied2_.swap(other.occupied2_);
+  std::swap(capacity_, other.capacity_);
+  std::swap(size_, other.size_);
+  std::swap(hash1_, other.hash1_);
+  std::swap(hash2_, other.hash2_);
+  std::swap(equal_, other.equal_);
+}
+
 #endif
