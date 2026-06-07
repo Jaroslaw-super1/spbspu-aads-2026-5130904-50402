@@ -71,12 +71,12 @@ namespace afanasev
 
 template< class Key, class Value, class Hash1, class Hash2, class Equal >
 afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
-CuckooHashTable(size_t initial_capacity)
-  : capacity_(initial_capacity),
-    size_(0),
-    hash1_(Hash1()),
-    hash2_(Hash2()),
-    equal_(Equal())
+CuckooHashTable(size_t initial_capacity):
+  capacity_(initial_capacity),
+  size_(0),
+  hash1_(Hash1()),
+  hash2_(Hash2()),
+  equal_(Equal())
 {
   if (!capacity_)
   {
@@ -92,5 +92,18 @@ CuckooHashTable(size_t initial_capacity)
   }
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+CuckooHashTable(const CuckooHashTable & other):
+  data1_(other.data1_),
+  occupied1_(other.occupied1_),
+  data2_(other.data2_),
+  occupied2_(other.occupied2_),
+  capacity_(other.capacity_),
+  size_(other.size_),
+  hash1_(other.hash1_),
+  hash2_(other.hash2_),
+  equal_(other.equal_)
+{}
 
 #endif
