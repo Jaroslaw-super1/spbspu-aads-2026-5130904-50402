@@ -311,4 +311,44 @@ rehash(size_t new_capacity)
   swap(new_table);
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+bool afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+insertInternal(const Key & k, const Value & v)
+{
+  Value * existing = findValue(k);
+  if (existing)
+  {
+    *existing = v;
+    return true;
+  }
+
+  value_type current(k, v);
+  const size_t MAX_LOOP = 2 * capacity_;
+
+  for (size_t step = 0; step < MAX_LOOP; ++step)
+  {
+    size_t i1 = hash1_(current.first) % capacity_;
+    if (!isOccupied1(i1))
+    {
+      data1_[i1] = std::move(current);
+      setOccupied1(i1, true);
+      ++size_;
+      return true;
+    }
+    std::swap(current, data1_[i1]);
+
+    size_t i2 = hash2_(current.first) % capacity_;
+    if (!isOccupied2(i2))
+    {
+      data2_[i2] = std::move(current);
+      setOccupied2(i2, true);
+      ++size_;
+      return true;
+    }
+    std::swap(current, data2_[i2]);
+  }
+
+  return false;
+}
+
 #endif
