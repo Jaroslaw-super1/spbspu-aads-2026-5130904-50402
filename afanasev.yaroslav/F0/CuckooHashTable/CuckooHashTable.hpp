@@ -123,4 +123,11 @@ CuckooHashTable(CuckooHashTable && other) noexcept:
   other.size_ = 0;
 }
 
+template< class Key, class Value, class Hash1, class Hash2, class Equal >
+afanasev::CuckooHashTable< Key, Value, Hash1, Hash2, Equal >::
+~CuckooHashTable()
+{
+  clear();
+}
+
 #endif
